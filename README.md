@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# First step of all, set up .env.local
+## .env.local
 
-## Getting Started
+## HOST is the Server Name from the connection dialog
+SQL_SERVER_HOST="<server your localhost>"
 
-First, run the development server:
+## USER is the Login name
+SQL_SERVER_USER="<server username>"
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## PASSWORD is the password you typed into the dialog
+SQL_SERVER_PASSWORD="<user password>"
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## DB is the specific database you are querying (e.g., where your Users table is)
+SQL_SERVER_DB="<The Name of Your Application's Database>"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Set up database using sql server and table
+CREATE DATABASE DatabaseClassProject
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY,
+    Username NVARCHAR(50) UNIQUE NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    Password VARBINARY(MAX) NOT NULL, // set up for hashing password
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Run application
+by using pnpm run dev
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+or
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+pnpm build
