@@ -1,51 +1,75 @@
+"use client";
 import Link from "next/link";
+import { Input } from "@/components/ui/form";
+import { ButtonPrimary } from "@/components/ui/button";
+import { useActionState } from "react";
+import { FormState, singingUp } from "@/action/signup";
 
 export default function Register() {
+  const initialState: FormState = {
+    success: false,
+    message: "",
+    errors: undefined,
+  };
+  const [state, formAction, isPending] = useActionState(
+    singingUp,
+    initialState
+  );
   return (
     <div className="w-screen h-screen bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 flex items-center">
-      <div className="md:max-w-md max-w-3/4 mx-auto bg-zinc-100 rounded-xl px-7 py-10">
+      <div className="md:max-w-md max-w-3/4 mx-auto bg-zinc-100 rounded-xl px-7 py-10 shadow-2xl">
         <h1 className="text-center text-3xl font-bold mb-7">Sign Up</h1>
-        <form action="">
-          <label htmlFor="username">Username: </label>
-          <input
-            type="text"
+        <form action={formAction}>
+          <Input
             id="username"
-            name="username"
-            placeholder="Your username"
-            className="w-full border rounded-full py-2 px-5 mt-1 mb-5"
+            type="text"
+            placeholder="Your Username"
+            className={state.errors?.username && "border-red-500 border-2"}
+            error={state.errors?.username}
           />
-          <label htmlFor="email">Email: </label>
-          <input
-            type="email"
+          {state.errors?.username && (
+            <p className="text-red-500 text-sm ml-2">
+              {state.errors.username}
+            </p>
+          )}
+          <Input
             id="email"
-            name="email"
-            placeholder="Your email"
-            className="w-full border rounded-full py-2 px-5 mt-1 mb-5"
+            type="text"
+            placeholder="Your Email"
+            error={state.errors?.email}
           />
-          <label htmlFor="password">Password: </label>
-          <input
-            type="password"
+          {state.errors?.email && (
+            <p className="text-red-500 text-sm ml-2">
+              {state.errors.email}
+            </p>
+          )}
+          <Input
             id="password"
-            name="password"
-            placeholder="Your password"
-            className="w-full border rounded-full py-2 px-5 mt-1 mb-5"
-          />
-          <label htmlFor="rePassword">Retype Password: </label>
-          <input
             type="password"
-            id="password"
-            name="password"
-            placeholder="Retype your password"
-            className="w-full border rounded-full py-2 px-5 mt-1 mb-5"
+            placeholder="Your Password"
+            error={state.errors?.password}
           />
+          {state.errors?.password && (
+            <p className="text-red-500 text-sm ml-2">{state.errors.password}</p>
+          )}
+          <Input
+            id="retypePassword"
+            label="Retype Password"
+            type="password"
+            placeholder="Retype Your Password"
+            error={state.errors?.retypePassword}
+          />
+          {state.errors?.retypePassword && (
+            <p className="text-red-500 text-sm ml-2">
+              {state.errors.retypePassword}
+            </p>
+          )}
           <Link href={"/login"}>
-            <span className="text-sky-600 text-sm hover:text-sky-700 hover:underline">
+            <p className="mt-10 text-sky-600 text-sm hover:text-sky-700 hover:underline">
               Already has an account
-            </span>
+            </p>
           </Link>
-          <button className="w-full bg-sky-500 text-zinc-100 rounded-full py-2 mt-7 hover:bg-sky-600 active:bg-sky-700 hover:cursor-pointer">
-            Sign Up
-          </button>
+          <ButtonPrimary>{isPending ? "Loading" : "Sign Up"}</ButtonPrimary>
         </form>
       </div>
     </div>
