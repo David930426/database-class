@@ -8,7 +8,7 @@ const publicRoutes = ["/login", "/register"];
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const isProtected = protectedRoutes.some((path) => pathname.startsWith(path));
+  const isProtected = protectedRoutes.includes(pathname);
   const isPublic = publicRoutes.includes(pathname);
 
   const cookie = (await cookies()).get("session")?.value;
@@ -46,6 +46,5 @@ export const config = {
         '/',
         '/login',
         '/register',
-        '/dashboard/:path*', // Include other protected routes
     ],
 };
