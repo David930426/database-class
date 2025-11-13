@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/form";
 import { ButtonPrimary } from "@/components/ui/button";
 import { useActionState } from "react";
-import { FormState } from "@/lib/types";
+import { FormState } from "@/lib/definitions";
 import { login } from "@/action/login";
 
 export default function Login() {

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/form";
 import { ButtonPrimary } from "@/components/ui/button";
 import { useActionState } from "react";
 import { singingUp } from "@/action/signup";
-import { FormState } from "@/lib/types";
+import { FormState } from "@/lib/definitions";
 
 export default function Register() {
   const initialState: FormState = {

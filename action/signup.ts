@@ -4,7 +4,7 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import sql from "mssql";
 import { DbConnect } from "@/lib/db";
-import { FormState } from "@/lib/types";
+import { FormState } from "@/lib/definitions";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
@@ -35,7 +35,6 @@ export async function singingUp(
               VALUES (@Username, @Email, @Password);
             `);
     console.log("\x1b[38;5;46mUser successfully inserted.\x1b[37m");
-
   } catch (err) {
     if (err instanceof z.ZodError) {
       const zodError = err as z.ZodError;

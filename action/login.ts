@@ -1,6 +1,7 @@
 "use server";
 import { DbConnect } from "@/lib/db";
-import { FormState } from "@/lib/types";
+import { FormState } from "@/lib/definitions";
+import { createSession } from "@/lib/session";
 import { LogInSchema } from "@/lib/zod";
 import bcrypt from "bcryptjs";
 import sql from "mssql";
@@ -43,6 +44,8 @@ export async function login(
         message: "Invalid username or password",
       };
     }
+    await createSession(userRecord.UserID);
+
   } catch (err) {
     if (err instanceof ZodError) {
       const zodError = err as ZodError;
