@@ -1,7 +1,16 @@
+"use client";
+import { ButtonPrimary } from "@/components/ui/button";
+import { logout } from "@/action/logout";
+
 export default function Home() {
   return (
     <>
-      <p className="m-10 bg-red-400">hello my world</p>
+      <h1>Main page</h1>
+      <form action={logout}>
+        <ButtonPrimary type="submit" className="min-w-23">
+          Logout
+        </ButtonPrimary>
+      </form>
     </>
   );
 }

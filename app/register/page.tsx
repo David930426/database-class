@@ -4,14 +4,9 @@ import { Input } from "@/components/ui/form";
 import { ButtonPrimary } from "@/components/ui/button";
 import { useActionState } from "react";
 import { singingUp } from "@/action/signup";
-import { FormState } from "@/lib/definitions";
+import { initialState } from "@/lib/initialState";
 
 export default function Register() {
-  const initialState: FormState = {
-    success: false,
-    message: "",
-    errors: undefined,
-  };
   const [state, formAction, isPending] = useActionState(
     singingUp,
     initialState
@@ -66,7 +61,7 @@ export default function Register() {
               Already has an account
             </p>
           </Link>
-          <ButtonPrimary type="submit" disable={isPending}>
+          <ButtonPrimary type="submit" disable={isPending} className="w-full">
             {isPending ? "Loading" : "Sign Up"}
           </ButtonPrimary>
         </form>

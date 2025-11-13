@@ -3,15 +3,10 @@ import Link from "next/link";
 import { Input } from "@/components/ui/form";
 import { ButtonPrimary } from "@/components/ui/button";
 import { useActionState } from "react";
-import { FormState } from "@/lib/definitions";
 import { login } from "@/action/login";
+import { initialState } from "@/lib/initialState";
 
 export default function Login() {
-  const initialState: FormState = {
-    success: false,
-    message: "",
-    errors: undefined,
-  };
   const [state, loginAction, isPending] = useActionState(login, initialState);
   return (
     <div className="w-screen h-screen bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 flex items-center">
@@ -35,7 +30,7 @@ export default function Login() {
               Doesn&apos;t have an account
             </p>
           </Link>
-          <ButtonPrimary type="submit" disable={isPending}>
+          <ButtonPrimary type="submit" disable={isPending} className="w-full">
             {isPending ? "Loading" : "Login"}
           </ButtonPrimary>
           {!state?.success && (
