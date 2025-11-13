@@ -14,7 +14,7 @@ export function Input({
   placeholder?: string;
   className?: string;
   labelClass?: string;
-  error?: string;
+  error?: string | boolean;
 }) {
   return (
     <div className="mt-5">
