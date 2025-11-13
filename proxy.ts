@@ -16,8 +16,9 @@ export async function proxy(request: NextRequest) {
 
   const isAuthenticated = !!session?.userId;
 
-  console.log(session); // test
-  console.log(session?.userId); // test
+  // Check with console
+  // console.log(session);
+  // console.log(session?.userId);
 
   if (isPublic && isAuthenticated) {
     return NextResponse.redirect(new URL("/", request.nextUrl))
