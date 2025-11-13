@@ -6,7 +6,7 @@ use `openssl rand -base64 32` in terminal to get you secret key
 
 ### HOST is the Server Name from the connection dialog
 `SQL_SERVER_HOST="<server your localhost>"`
-*** I am using my localhost ip
+*** I am using localhost
 *** Don't forget to open TCP connection and set the port to 1433
 
 ### USER is the Login name

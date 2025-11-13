@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from "jose";
+import { JWTPayload, SignJWT, jwtVerify } from "jose";
 import { SessionPayload } from "@/lib/definitions";
 import { cookies } from "next/headers";
 
@@ -13,7 +13,13 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey);
 }
 
-export async function decrypt(session: string | undefined = "") {
+// must give a promise to giveback a value or the code can not accept if it give in undefined values
+export async function decrypt(
+  session: string | undefined | null = ""
+): Promise<JWTPayload | null> {
+  if (!session) {
+    return null;
+  }
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],
@@ -22,6 +28,7 @@ export async function decrypt(session: string | undefined = "") {
   } catch (error) {
     console.error(error);
     console.log("Failed to verify session");
+    return null;
   }
 }
 
