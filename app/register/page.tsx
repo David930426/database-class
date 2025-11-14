@@ -22,6 +22,7 @@ export default function Register() {
             placeholder="Your Username"
             className={state?.errors?.username && "border-red-500 border-2"}
             error={state?.errors?.username}
+            disabled={isPending}
           />
           {state?.errors?.username && (
             <p className="text-red-500 text-sm ml-2">{state.errors.username}</p>
@@ -31,6 +32,7 @@ export default function Register() {
             type="text"
             placeholder="Your Email"
             error={state?.errors?.email}
+            disabled={isPending}
           />
           {state?.errors?.email && (
             <p className="text-red-500 text-sm ml-2">{state.errors.email}</p>
@@ -40,6 +42,7 @@ export default function Register() {
             type="password"
             placeholder="Your Password"
             error={state?.errors?.password}
+            disabled={isPending}
           />
           {state?.errors?.password && (
             <p className="text-red-500 text-sm ml-2">{state.errors.password}</p>
@@ -50,6 +53,7 @@ export default function Register() {
             type="password"
             placeholder="Retype Your Password"
             error={state?.errors?.retypePassword}
+            disabled={isPending}
           />
           {state?.errors?.retypePassword && (
             <p className="text-red-500 text-sm ml-2">
@@ -61,8 +65,8 @@ export default function Register() {
               Already has an account
             </p>
           </Link>
-          <ButtonPrimary type="submit" disable={isPending} className="w-full">
-            {isPending ? "Loading" : "Sign Up"}
+          <ButtonPrimary type="submit" className="w-full mt-7">
+            Sign Up
           </ButtonPrimary>
         </form>
         {!state?.success && (

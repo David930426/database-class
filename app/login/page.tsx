@@ -18,20 +18,22 @@ export default function Login() {
             type="text"
             placeholder="Your Username"
             error={!state.success && state.message}
+            disabled={isPending}
           />
           <Input
             id="password"
             type="password"
             placeholder="Your Password"
             error={!state.success && state.message}
+            disabled={isPending}
           />
           <Link href={"/register"}>
             <p className="mt-10 ml-2 text-sky-600 text-sm hover:text-sky-700 hover:underline">
               Doesn&apos;t have an account
             </p>
           </Link>
-          <ButtonPrimary type="submit" disable={isPending} className="w-full">
-            {isPending ? "Loading" : "Login"}
+          <ButtonPrimary type="submit" className="w-full mt-7">
+            Login
           </ButtonPrimary>
           {!state?.success && (
             <p className="ml-2 text-sm mt-5 text-red-600">{state?.message}</p>

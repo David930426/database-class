@@ -1,4 +1,3 @@
-
 export function Input({
   type,
   id,
@@ -7,6 +6,7 @@ export function Input({
   className,
   labelClass,
   error,
+  disabled,
 }: {
   type: string;
   id: string;
@@ -15,9 +15,10 @@ export function Input({
   className?: string;
   labelClass?: string;
   error?: string | boolean;
+  disabled?: boolean;
 }) {
   return (
-    <div className="mt-5">
+    <div className={`mt-5 ${disabled && "text-zinc-400"}`}>
       <label htmlFor={id} className={`capitalize ml-2 ${labelClass}`}>
         {label ? label : id}:
       </label>
@@ -26,7 +27,12 @@ export function Input({
         id={id}
         name={id}
         placeholder={placeholder}
-        className={`w-full border  rounded-full py-2 px-5 mt-1  focus:outline-hidden ${className} ${error ? "border-red-400 border-2 focus:border-red-500" : "border-zinc-300 focus:border-zinc-400"}`}
+        className={`w-full border rounded-full py-2 px-5 mt-1  focus:outline-hidden ${className} ${
+          error
+            ? "border-red-400 border-2 focus:border-red-500"
+            : "border-zinc-300 focus:border-zinc-400"
+        }`}
+        disabled={disabled}
       />
     </div>
   );
