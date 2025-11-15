@@ -34,3 +34,16 @@ export const EditProfileSchema = z.object({
     .max(50, "Username con not more than 50 characters"),
   email: z.email("Invalid email address format.").max(100, "Email too long"),
 });
+
+export const EditPasswordSchema = z
+  .object({
+    oldPassword: z.string().min(8, "Password must be at least 8 characters."),
+    newPassword: z.string().min(8, "Password must be at least 8 characters."),
+    retypeNewPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters."),
+  })
+  .refine((data) => data.newPassword === data.retypeNewPassword, {
+    message: "New password is not match",
+    path: ["retypeNewPassword"],
+  });

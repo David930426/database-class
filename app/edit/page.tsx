@@ -54,14 +54,14 @@ export default function Page() {
           error={state.errors?.email}
         />
         <p className="text-red-500 text-sm ml-2 mt-1">{state.errors?.email}</p>
-        {/* <Input type="password" id="oldPassword" label="Old Password" labelClass="text-xl" />
-        <Input type="password" id="newPassword"  label="New Password" labelClass="text-xl" />
-        <Input type="password" id="retypeNewPassword" label="Retype New Password" labelClass="text-xl" /> */}
+        <p className="ml-2 mt-5 text-sky-500 hover:text-sky-600 hover:underline active:sky-700">
+          <Link href={"/edit/password"}>Change Password</Link>
+        </p>
         <p className="text-red-500 ml-3 mt-5">
           {!state.success && state?.message}
         </p>
-        <ButtonPrimary type="submit" className="w-full my-10">
-          Edit
+        <ButtonPrimary type="submit" className="w-full mt-10 mb-5">
+          Edit Profile
         </ButtonPrimary>
       </form>
     </div>
