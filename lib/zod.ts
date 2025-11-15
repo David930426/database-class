@@ -26,3 +26,11 @@ export const LogInSchema = z.object({
     .max(50, "Username con not more than 50 characters"),
   password: z.string().min(8, "Password must be at least 8 characters."),
 });
+
+export const EditProfileSchema = z.object({
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters.")
+    .max(50, "Username con not more than 50 characters"),
+  email: z.email("Invalid email address format.").max(100, "Email too long"),
+});

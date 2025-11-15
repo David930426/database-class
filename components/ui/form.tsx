@@ -7,6 +7,7 @@ export function Input({
   labelClass,
   error,
   disabled,
+  defaultValue,
 }: {
   type: string;
   id: string;
@@ -16,6 +17,7 @@ export function Input({
   labelClass?: string;
   error?: string | boolean;
   disabled?: boolean;
+  defaultValue?: string;
 }) {
   return (
     <div className={`mt-5 ${disabled && "text-zinc-400"}`}>
@@ -33,6 +35,7 @@ export function Input({
             : "border-zinc-300 focus:border-zinc-400"
         }`}
         disabled={disabled}
+        defaultValue={defaultValue}
       />
     </div>
   );

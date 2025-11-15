@@ -1,8 +1,7 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
-const protectedRoutes = ["/"];
+const protectedRoutes = ["/", "/edit"];
 const publicRoutes = ["/login", "/register"];
 
 export async function proxy(request: NextRequest) {
@@ -11,7 +10,7 @@ export async function proxy(request: NextRequest) {
   const isProtected = protectedRoutes.includes(pathname);
   const isPublic = publicRoutes.includes(pathname);
 
-  const cookie = (await cookies()).get("session")?.value;
+  const cookie = request.cookies.get("session")?.value;
   const session = await decrypt(cookie);
 
   const isAuthenticated = !!session?.userId;
@@ -21,7 +20,7 @@ export async function proxy(request: NextRequest) {
   // console.log(session?.userId);
 
   if (isPublic && isAuthenticated) {
-    return NextResponse.redirect(new URL("/", request.nextUrl))
+    return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
   if (isProtected && !session?.userId) {
@@ -32,19 +31,16 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-    // FIX: Include the paths in the matcher so the middleware runs on them.
-    // This matcher tells Next.js to run the middleware on the root (/) and the public pages,
-    // while still excluding static assets and APIs.
-    matcher: [
-        /*
-          This pattern explicitly matches the pages you want to manage:
-          - / (The root page)
-          - /login
-          - /register
-          - And any other path that is NOT an API or static asset
-        */
-        '/',
-        '/login',
-        '/register',
-    ],
+  // Use a more inclusive matcher that excludes static files and APIs 
+  // but includes all paths you might want to protect/redirect.
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
