@@ -23,6 +23,24 @@ _** Don't forget to open TCP connection and set the port to 1433
 
 `SQL_SERVER_DB="<The Name of Your Application's Database>"`
 
+# Run application
+
+### Download all depedencies
+
+`pnpm i`
+
+### Start by using
+
+`pnpm run dev`
+
+### Build pnpm
+
+`pnpm build`
+
+# My set up for SQL Server Database
+
+# USER
+
 ## Set up database using sql server and table
 
 `CREATE DATABASE DatabaseClassProject`
@@ -67,16 +85,50 @@ UPDATE Users
 SET Password = @Password
 WHERE UserID = @UserId
 
-# Run application
+# ITEMS
 
-### Download all depedencies
+## Create Table for branch store
 
-`pnpm i`
+Create Table Branches (
+IndexBranchId INT IDENTITY(1,1) NOT NULL,
+BranchId AS 'B' + CONVERT(NVARCHAR(10), IndexBranchId) PERSISTED,
+BranchName NVARCHAR(200),
+Location NVARCHAR(200),
+PRIMARY KEY(IndexBranchId)
+)
 
-### Start by using
+## Create Table for sections
 
-`pnpm run dev`
+CREATE TABLE Sections (
+SectionId INT IDENTITY(1,1) NOT NULL,
+SectionName NVARCHAR(150),
+PRIMARY KEY (SectionId)
+)
 
-### Build pnpm
+## Create Table for product
 
-`pnpm build`
+CREATE TABLE Products (
+IndexProductId BIGINT IDENTITY(1,1) NOT NULL,
+ProductId AS 'P' + CONVERT(NVARCHAR(20), IndexProductId) PERSISTED,
+ProductName NVARCHAR(100) NOT NULL,
+ExpiredAt DATE NOT NULL,
+SectionId INT NOT NULL,
+PRIMARY KEY (IndexProductId),
+FOREIGN KEY (SectionId) REFERENCES Sections(SectionId)
+)
+
+## Create Inventories
+
+CREATE TABLE Inventories (
+	InventoryId BIGINT IDENTITY(1,1) NOT NULL,
+	ProductId BIGINT NOT NULL,
+	BranchId INT NOT NULL,
+	Quantity INT DEFAULT 0,
+	UpdatedAt DATETIME DEFAULT GETDATE(),
+
+	PRIMARY KEY (InventoryId),
+	FOREIGN KEY (ProductId) REFERENCES Products(IndexProductId),
+	FOREIGN KEY (BranchId) REFERENCES Branches(IndexBranchId),
+
+	UNIQUE(ProductId, BranchId)
+)

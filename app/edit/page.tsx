@@ -1,7 +1,7 @@
 "use client";
 import { deleteUser } from "@/action/delete";
 import { editProfile } from "@/action/edit";
-import { getData } from "@/action/getData";
+import { getDataUser } from "@/action/getData";
 import { LoadingPage } from "@/components/loading";
 import {
   AlertDialog,
@@ -30,7 +30,7 @@ export default function Page() {
   const { pending } = useFormStatus();
   useEffect(() => {
     const dataGet = async () => {
-      const dataFromDb = await getData();
+      const dataFromDb = await getDataUser();
       setData(dataFromDb);
     };
     dataGet();

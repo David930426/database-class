@@ -27,3 +27,29 @@ export type GetData = {
   Email: string;
   Password: string;
 };
+
+export type GetItem = {
+  ProductId: string;
+  ProductName: string;
+  ExpiredAt: Date;
+  Quantity: number;
+  SectionName: string;
+  BranchId: string;
+  BranchName: string;
+  Location: string;
+};
+
+export type GetProducts = {
+  ProductId: string;
+  ProductName: string;
+};
+
+export type GetBranches = {
+  BranchId: string;
+  BranchName: string;
+};
+
+export type GetSection = {
+  SectionId: number;
+  SectionName: string;
+};
