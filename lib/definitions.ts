@@ -49,7 +49,7 @@ export type GetBranches = {
   BranchName: string;
 };
 
-export type GetSection = {
-  SectionId: number;
-  SectionName: string;
-};
+// export type GetSection = {
+//   SectionId: number;
+//   SectionName: string;
+// };

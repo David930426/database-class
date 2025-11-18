@@ -47,3 +47,12 @@ export const EditPasswordSchema = z
     message: "New password is not match",
     path: ["retypeNewPassword"],
   });
+
+export const AddInventorySchema = z.object({
+  product: z.string("Product must be a string"),
+  branch: z.string("Branch must be a string"),
+  quantity: z
+    .string()
+    .pipe(z.coerce.number())
+    .pipe(z.number().min(0, "Quantity cannot be negative")),
+});

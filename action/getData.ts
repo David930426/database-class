@@ -32,7 +32,12 @@ export async function getDataUser() {
   }
 }
 
-export async function getDataItem(): Promise<GetItem[] | null> {
+export async function getDataItem(
+  orderProduct: boolean,
+  orderBranch: boolean,
+  orderQuantity: boolean,
+  orderExpired: boolean
+): Promise<GetItem[] | null> {
   try {
     const pool = await DbConnect();
     const result = await pool.request().query(`
@@ -46,7 +51,16 @@ export async function getDataItem(): Promise<GetItem[] | null> {
       INNER JOIN Sections AS s 
         ON p.SectionId = s.SectionId
       
-      ORDER BY p.ProductName, b.BranchName;
+      ${
+        orderExpired
+          ? "ORDER BY p.ExpiredAt"
+          : orderQuantity
+          ? "ORDER BY i.Quantity"
+          : `
+      ORDER BY ${orderProduct ? "p.ProductId" : "p.ProductId DESC"}, ${
+              orderBranch ? "b.BranchId" : "b.BranchId DESC"
+            }`
+      };
         `);
     return result.recordset as GetItem[];
   } catch (err) {
