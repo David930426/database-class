@@ -41,12 +41,12 @@ export default function Home() {
           </form>
         </div>
       </div>
-      <h1 className="w-8/9 mx-auto px-5 mb-3 text-2xl text-zinc-400 font-bold">
+      <h1 className="w-8/9 mx-auto px-5 mb-3 text-2xl text-zinc-400 font-bold md:text-4xl md:mb-5">
         Inventories
       </h1>
       <Table />
-      <div className="flex justify-end mb-15 mt-7 pr-10">
-        <Link href="/addInventory" className="bg-sky-500 hover:bg-sky-600 active:bg-sky-700 text-zinc-100 rounded-full p-3">Add Inventory</Link>
+      <div className="flex justify-end mb-15 mt-7 pr-10 md:mt-10 md:mr-15 md:text-xl">
+        <Link href="/addInventory" className="bg-sky-500 hover:bg-sky-600 active:bg-sky-700 text-zinc-100 rounded-full p-3 md:p-4">Add Inventory</Link>
       </div>
     </>
   );
