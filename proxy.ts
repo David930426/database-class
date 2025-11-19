@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
-const protectedRoutes = ["/", "/edit"];
+const protectedRoutes = ["/", "/edit", "/addInventory", "/edit/password", "/edit/[inventoryId]"];
 const publicRoutes = ["/login", "/register"];
 
 export async function proxy(request: NextRequest) {
@@ -31,7 +31,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Use a more inclusive matcher that excludes static files and APIs 
+  // Use a more inclusive matcher that excludes static files and APIs
   // but includes all paths you might want to protect/redirect.
   matcher: [
     /*

@@ -56,3 +56,16 @@ export const AddInventorySchema = z.object({
     .pipe(z.coerce.number())
     .pipe(z.number().min(0, "Quantity cannot be negative")),
 });
+
+export const EditInventorySchema = z.object({
+  inventoryId: z
+    .string()
+    .pipe(z.coerce.number())
+    .pipe(z.number("Inventory Id must be a number")),
+  product: z.string("Product must be a string"),
+  branch: z.string("Branch must be a string"),
+  quantity: z
+    .string()
+    .pipe(z.coerce.number())
+    .pipe(z.number().min(0, "Quantity cannot be negative")),
+});

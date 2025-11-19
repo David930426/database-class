@@ -77,7 +77,7 @@ export function ButtonPrimary({
     <button
       className={`${className}  text-zinc-100 rounded-full py-2 flex justify-center ${
         status.pending
-          ? `hover:cursor-not-allowed ${danger ? `bg-rose-600` : "bg-sky-600"}`
+          ? `hover:cursor-wait ${danger ? `bg-rose-600` : "bg-sky-600"}`
           : `hover:cursor-pointer  ${
               danger
                 ? `bg-rose-500 hover:bg-rose-600 active:bg-rose-700`

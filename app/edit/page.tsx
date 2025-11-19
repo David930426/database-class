@@ -65,7 +65,7 @@ export default function Page() {
             <AlertDialogFooter>
               <AlertDialogCancel disabled={pending} className="hover:cursor-pointer">Cancel</AlertDialogCancel>
               <form>
-                <AlertDialogAction className="bg-rose-500 hover:bg-rose-600 active:bg-rose-700 w-full cursor-pointer" formAction={deleteUser} type="submit" disabled={pending}>
+                <AlertDialogAction className={`bg-rose-500 hover:bg-rose-600 active:bg-rose-700 w-full  ${pending ? "cursor-wait" : "cursor-pointer"}`} formAction={deleteUser} type="submit" disabled={pending}>
                   {pending ? <Spinner className="size-6" /> : "Sure"}
                 </AlertDialogAction>
               </form>

@@ -41,7 +41,7 @@ export async function getDataItem(
   try {
     const pool = await DbConnect();
     const result = await pool.request().query(`
-      SELECT p.ProductId, p.ProductName, p.ExpiredAt, s.SectionName, i.Quantity, b.BranchId, b.BranchName, b.Location 
+      SELECT i.InventoryId, p.ProductId, p.ProductName, p.ExpiredAt, s.SectionName, i.Quantity, b.BranchId, b.BranchName, b.Location 
       
       FROM Inventories AS i INNER JOIN Products AS p ON i.ProductId = p.IndexProductId 
         

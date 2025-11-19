@@ -29,6 +29,7 @@ export type GetData = {
 };
 
 export type GetItem = {
+  InventoryId: string;
   ProductId: string;
   ProductName: string;
   ExpiredAt: Date;
@@ -53,3 +54,10 @@ export type GetBranches = {
 //   SectionId: number;
 //   SectionName: string;
 // };
+
+export type GetInventory = {
+  InventoryId: number;
+  ProductId: number;
+  BranchId: number;
+  Quantity: number;
+}
