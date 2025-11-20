@@ -1,11 +1,12 @@
 "use client";
 import { editInventory, searchInventory } from "@/action/editInventory";
-import { getBranch, getProduct } from "@/action/inventoryData";
+import { getBranch, getProduct } from "@/action/getData";
 import { LoadingPage } from "@/components/loading";
+import { Back } from "@/components/ui/back";
 import { ButtonPrimary } from "@/components/ui/button";
+import { Title } from "@/components/ui/title";
 import { GetBranches, GetInventory, GetProducts } from "@/lib/definitions";
 import { initialState } from "@/lib/initialState";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 
@@ -41,18 +42,9 @@ export default function EditInventoryPage() {
 
   return (
     <div className="px-10 pt-5">
-      <p className="text-zinc-500 text-3xl mb-10">
-        <Link
-          href="/"
-          className="hover:bg-zinc-300 active:bg-zinc-400 rounded-full px-3 pb-1"
-        >
-          {"<"}
-        </Link>
-      </p>
-      <div className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 p-7 pr-10 items-center rounded-xl mb-10">
-        <h1 className="text-3xl text-zinc-100 font-bold">Edit Inventory</h1>
-      </div>
-      <form action={editInvAction} className="px-2 text-xl">
+      <Back href="/"/>
+      <Title>Edit Inventory</Title>
+      <form action={editInvAction} className="px-2 mt-5 text-xl">
         <input
           type="number"
           name="inventoryId"

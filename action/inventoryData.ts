@@ -1,36 +1,10 @@
 "use server";
 import { DbConnect } from "@/lib/db";
-import { FormState, GetBranches, GetProducts } from "@/lib/definitions";
+import { FormState } from "@/lib/definitions";
 import { AddInventorySchema } from "@/lib/zod";
 import sql from "mssql";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
-export async function getProduct(): Promise<GetProducts[] | null> {
-  try {
-    const pool = await DbConnect();
-    const result = await pool
-      .request()
-      .query(`SELECT ProductId, ProductName FROM Products`);
-    return result.recordset as GetProducts[];
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
-
-export async function getBranch(): Promise<GetBranches[] | null> {
-  try {
-    const pool = await DbConnect();
-    const result = await pool
-      .request()
-      .query(`SELECT BranchId, BranchName FROM Branches`);
-    return result.recordset as GetBranches[];
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
 
 export async function addInventory(prevState: FormState, formData: FormData) {
   const rawData = Object.fromEntries(formData.entries());

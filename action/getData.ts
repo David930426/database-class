@@ -3,7 +3,8 @@ import { DbConnect } from "@/lib/db";
 import { decrypt } from "@/lib/session";
 import { cookies } from "next/headers";
 import sql from "mssql";
-import { GetItem } from "@/lib/definitions";
+import { GetItem, GetSection } from "@/lib/definitions";
+import { GetBranches, GetProducts } from "@/lib/definitions";
 
 export async function getDataUser() {
   const cookie = (await cookies()).get("session")?.value;
@@ -53,9 +54,9 @@ export async function getDataItem(
       
       ${
         orderExpired
-          ? "ORDER BY p.ExpiredAt"
+          ? "ORDER BY p.ExpiredAt, i.Quantity DESC"
           : orderQuantity
-          ? "ORDER BY i.Quantity"
+          ? "ORDER BY i.Quantity, p.ExpiredAt"
           : `
       ORDER BY ${orderProduct ? "p.ProductId" : "p.ProductId DESC"}, ${
               orderBranch ? "b.BranchId" : "b.BranchId DESC"
@@ -63,6 +64,45 @@ export async function getDataItem(
       };
         `);
     return result.recordset as GetItem[];
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function getProduct(): Promise<GetProducts[] | null> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .query(`SELECT ProductId, ProductName FROM Products`);
+    return result.recordset as GetProducts[];
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function getBranch(): Promise<GetBranches[] | null> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .query(`SELECT BranchId, BranchName FROM Branches`);
+    return result.recordset as GetBranches[];
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export async function getSection(): Promise<GetSection[] | null> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .query(`SELECT SectionId, SectionName FROM Sections`);
+    return result.recordset as GetSection[];
   } catch (err) {
     console.error(err);
     return null;

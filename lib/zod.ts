@@ -69,3 +69,29 @@ export const EditInventorySchema = z.object({
     .pipe(z.coerce.number())
     .pipe(z.number().min(0, "Quantity cannot be negative")),
 });
+
+export const AddProductSchema = z.object({
+  productName: z
+    .string()
+    .min(3, "Product name must be at least 3 string charachters"),
+  expiredAt: z.coerce.date("Expired date must be a date"),
+  sectionId: z
+    .string()
+    .pipe(z.coerce.number())
+    .pipe(z.number("Section Id must be a number")),
+});
+
+export const EditProductSchema = z.object({
+  indexProductId: z
+    .string()
+    .pipe(z.coerce.number())
+    .pipe(z.number("Index Product Id must be a number")),
+  productName: z
+    .string()
+    .min(3, "Product name must be at least 3 string charachters"),
+  expiredAt: z.coerce.date("Expired date must be a date"),
+  sectionId: z
+    .string()
+    .pipe(z.coerce.number())
+    .pipe(z.number("Section Id must be a number")),
+});

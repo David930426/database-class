@@ -50,14 +50,31 @@ export type GetBranches = {
   BranchName: string;
 };
 
-// export type GetSection = {
-//   SectionId: number;
-//   SectionName: string;
-// };
+export type GetSection = {
+  SectionId: number;
+  SectionName: string;
+};
 
 export type GetInventory = {
   InventoryId: number;
   ProductId: number;
   BranchId: number;
   Quantity: number;
+}
+
+export type Products = {
+  IndexProductId: number;
+  ProductId: string;
+  ProductName: string;
+  ExpiredAt: Date;
+  SectionId: number;
+  SectionName: string;
+}
+
+export type EditProducts = {
+  IndexProductId: number;
+  ProductId: string;
+  ProductName: string;
+  ExpiredAt: Date;
+  SectionId: number;
 }

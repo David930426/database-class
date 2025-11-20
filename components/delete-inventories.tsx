@@ -14,7 +14,13 @@ import {
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 
-export function DeleteInventories({ inventoryId, setRefreshData }: { inventoryId: number; setRefreshData:() => void }) {
+export function DeleteInventories({
+  inventoryId,
+  setRefreshData,
+}: {
+  inventoryId: number;
+  setRefreshData: () => void;
+}) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [closeDialog, setCloseDialog] = useState(false);
 
@@ -52,6 +58,9 @@ export function DeleteInventories({ inventoryId, setRefreshData }: { inventoryId
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
+          <AlertDialogCancel className="hover:cursor-pointer">
+            Cancel
+          </AlertDialogCancel>
           <AlertDialogAction
             className={
               isDeleting
@@ -63,9 +72,6 @@ export function DeleteInventories({ inventoryId, setRefreshData }: { inventoryId
           >
             {isDeleting ? <Spinner className="size-5" /> : "Sure"}
           </AlertDialogAction>
-          <AlertDialogCancel className="hover:cursor-pointer">
-            Cancel
-          </AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

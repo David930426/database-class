@@ -137,7 +137,7 @@ export function Table() {
                         : ""
                     }`}
                   >
-                    {item.ExpiredAt.toDateString()}
+                    {item.ExpiredAt.toLocaleDateString()}
                   </td>
                   <td>
                     <span

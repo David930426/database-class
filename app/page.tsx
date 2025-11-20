@@ -22,7 +22,7 @@ export default function Home() {
   }
   return (
     <>
-      <div className="px-10 pt-10 mb-10">
+      <div className="p-10">
         <h1 className="text-3xl font-bold text-zinc-400">Homepage</h1>
         <div className="flex justify-between mt-5 bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 p-7 rounded-xl">
           <p className="text-2xl">
@@ -41,6 +41,7 @@ export default function Home() {
           </form>
         </div>
       </div>
+      <Link href="/product-branch">Click here</Link>
       <h1 className="w-8/9 mx-auto px-5 mb-3 text-2xl text-zinc-400 font-bold md:text-4xl md:mb-5">
         Inventories
       </h1>

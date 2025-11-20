@@ -1,9 +1,10 @@
 "use client";
 import { editPassword } from "@/action/edit";
+import { Back } from "@/components/ui/back";
 import { ButtonPrimary } from "@/components/ui/button";
 import { Input } from "@/components/ui/form";
+import { Title } from "@/components/ui/title";
 import { initialState } from "@/lib/initialState";
-import Link from "next/link";
 import { useActionState } from "react";
 
 export default function Page() {
@@ -13,17 +14,8 @@ export default function Page() {
   );
   return (
     <div className="px-10 pt-5">
-      <p className="text-zinc-500 text-3xl mb-10">
-        <Link
-          href="/edit"
-          className="hover:bg-zinc-300 active:bg-zinc-400 rounded-full px-3 pb-1"
-        >
-          {"<"}
-        </Link>
-      </p>
-      <h1 className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 p-7 rounded-xl text-3xl text-zinc-100 font-bold">
-        Change Password
-      </h1>
+      <Back href="/edit" />
+      <Title>Change Password</Title>
       <form action={editPasswordAction} className="px-2">
         <Input
           type="password"
@@ -61,7 +53,6 @@ export default function Page() {
         <ButtonPrimary type="submit" className="w-full my-10">
           Edit Password
         </ButtonPrimary>
-        
       </form>
     </div>
   );
