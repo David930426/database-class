@@ -54,7 +54,7 @@ export default function AddProduct() {
             ))}
           </select>
         </div>
-        <p>{state.message}</p>
+        <p className="ml-3 text-sm text-rose-500">{state.message}</p>
         <div className="flex justify-end mr-5 mt-10">
           <ButtonPrimary type="submit" className="w-35">
             Add Product

@@ -78,3 +78,10 @@ export type EditProducts = {
   ExpiredAt: Date;
   SectionId: number;
 }
+
+export type Branches = {
+  IndexBranchId: number;
+  BranchId: string;
+  BranchName: string;
+  Location: string;
+}
