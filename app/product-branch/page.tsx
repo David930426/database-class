@@ -1,13 +1,14 @@
 "use client";
 import { branch } from "@/action/branch";
 import { Product } from "@/action/product";
+import { section } from "@/action/section";
 import { BranchList } from "@/components/branch-list";
 import { LoadingPage } from "@/components/loading";
 import { ProductList } from "@/components/product-list";
 import { SectionList } from "@/components/section-list";
 import { Back } from "@/components/ui/back";
 import { Title } from "@/components/ui/title";
-import { Branches, Products } from "@/lib/definitions";
+import { Branches, GetSection, Products } from "@/lib/definitions";
 import { useEffect, useState } from "react";
 
 export default function ProductBranch() {
@@ -17,22 +18,25 @@ export default function ProductBranch() {
   };
   const [dataProduct, setDataProduct] = useState<Products[] | null>(null);
   const [dataBranch, setDataBranch] = useState<Branches[] | null>(null);
+  const [dataSection, setDataSection] = useState<GetSection[] | null>(null);
   useEffect(() => {
     const getData = async () => {
       const theData = await Product();
       const theBranch = await branch();
+      const theSection = await section();
       setDataProduct(theData);
       setDataBranch(theBranch);
+      setDataSection(theSection);
     };
     getData();
   }, [refresh]);
-  if (!dataProduct || !dataBranch) {
+  if (!dataProduct || !dataBranch || !dataSection) {
     return <LoadingPage />;
   }
   return (
     <div className="p-10 ">
       <Back href="/" />
-      <Title>Product and Branch List</Title>
+      <Title>All list</Title>
       <ProductList
         data={dataProduct}
         setRefresh={() => {
@@ -45,7 +49,12 @@ export default function ProductBranch() {
           setRefreshPage();
         }}
       />
-      <SectionList />
+      <SectionList
+        data={dataSection}
+        refreshPage={() => {
+          setRefreshPage();
+        }}
+      />
     </div>
   );
 }

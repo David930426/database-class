@@ -109,3 +109,15 @@ export const EditBranchSchema = z.object({
   branchName: z.string("Branch name must be a string"),
   branchLocation: z.string("Branch location must be a string"),
 });
+
+export const AddSectionSchema = z.object({
+  sectionName: z.string("Section Name must be a string"),
+});
+
+export const EditSectionSchema = z.object({
+  sectionId: z
+    .string()
+    .pipe(z.coerce.number())
+    .pipe(z.number("Index Branch ID must be a number")),
+  sectionName: z.string("Section Name must be a string"),
+});

@@ -1,32 +1,30 @@
-"use server";
+"use server"
 import { DbConnect } from "@/lib/db";
-import { Branches, FormState } from "@/lib/definitions";
-import { AddBranchSchema, EditBranchSchema } from "@/lib/zod";
+import { FormState, GetSection } from "@/lib/definitions";
+import { AddSectionSchema, EditSectionSchema } from "@/lib/zod";
 import sql from "mssql";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function branch(): Promise<Branches[] | null> {
+export async function section(): Promise<GetSection[] | null> {
   try {
     const pool = await DbConnect();
-    const result = await pool.request().query(`SELECT * FROM Branches`);
-    if (result.rowsAffected[0] === 0) {
-      console.log("Fetch data succesfully");
-    }
-    return result.recordset as Branches[];
+    const result = await pool.request().query(`SELECT * FROM Sections`);
+    if (result.rowsAffected[0] === 0) return null;
+    return result.recordset as GetSection[]
   } catch (err) {
     console.error(err);
     return null;
   }
 }
 
-export async function deleteBranch(indexBranchId: number) {
+export async function deleteSection(sectionId: number) {
   try {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("IndexBranchId", sql.BigInt, indexBranchId)
-      .query(`DELETE FROM Branches WHERE IndexBranchId = @IndexBranchId`);
+      .input("SectionId", sql.Int, sectionId)
+      .query(`DELETE FROM Sections WHERE SectionId = @SectionId`);
     if (result.rowsAffected[0] === 0) {
       console.log("Delete inventory unsuccessfull");
     }
@@ -36,10 +34,10 @@ export async function deleteBranch(indexBranchId: number) {
   revalidatePath("/product-branch");
 }
 
-export async function addBranch(prevState: FormState, formData: FormData) {
+export async function addSection(prevState: FormState, formData: FormData) {
   const rawData = Object.fromEntries(formData.entries());
   try {
-    const parsedData = AddBranchSchema.parse(rawData);
+    const parsedData = AddSectionSchema.parse(rawData);
 
     if (!parsedData) {
       return {
@@ -51,10 +49,9 @@ export async function addBranch(prevState: FormState, formData: FormData) {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("BranchName", sql.NVarChar, parsedData.branchName)
-      .input("Location", sql.NVarChar, parsedData.branchLocation)
-      .query(`INSERT INTO Branches (BranchName, Location) VALUES
-        (@BranchName, @Location)`);
+      .input("SectionName", sql.NVarChar, parsedData.sectionName)
+      .query(`INSERT INTO Sections (SectionName) VALUES
+        (@SectionName)`);
     if (!result) {
       return {
         success: false,
@@ -75,34 +72,34 @@ export async function addBranch(prevState: FormState, formData: FormData) {
   };
 }
 
-export async function oneBranch(
-  indexBranchId: number
-): Promise<Branches | null> {
+export async function oneSection(
+  sectionId: number
+): Promise<GetSection | null> {
   try {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("IndexBranchId", sql.Int, indexBranchId)
+      .input("SectionId", sql.Int, sectionId)
       .query(
         `SELECT *
-        FROM Branches
-        WHERE IndexBranchId = @IndexBranchId`
+        FROM Sections
+        WHERE SectionId = @SectionId`
       );
     if (result.rowsAffected[0] === 0) {
       console.error("There is no data");
       return null;
     }
-    return result.recordset[0] as Branches;
+    return result.recordset[0] as GetSection;
   } catch (err) {
     console.error(err);
     return null;
   }
 }
 
-export async function editBranch(prevState: FormState, formData: FormData) {
+export async function editSection(prevState: FormState, formData: FormData) {
   const rawData = Object.fromEntries(formData.entries());
   try {
-    const parsedData = EditBranchSchema.parse(rawData);
+    const parsedData = EditSectionSchema.parse(rawData);
 
     if (!parsedData) {
       return {
@@ -114,12 +111,11 @@ export async function editBranch(prevState: FormState, formData: FormData) {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("IndexBranchId", sql.Int, parsedData.indexBranchId)
-      .input("BranchName", sql.NVarChar, parsedData.branchName)
-      .input("Location", sql.NVarChar, parsedData.branchLocation)
-      .query(`UPDATE Branches 
-        SET BranchName = @BranchName, Location = @Location
-        WHERE IndexBranchId = @IndexBranchId`);
+      .input("SectionId", sql.Int, parsedData.sectionId)
+      .input("SectionName", sql.NVarChar, parsedData.sectionName)
+      .query(`UPDATE Sections 
+        SET SectionName = @SectionName
+        WHERE SectionId = @SectionId`);
     if (!result) {
       return {
         success: false,
