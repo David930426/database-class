@@ -6,10 +6,10 @@ import sql from "mssql";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function branch(): Promise<Branches[] | null> {
+export async function branch(branchSorted: boolean): Promise<Branches[] | null> {
   try {
     const pool = await DbConnect();
-    const result = await pool.request().query(`SELECT * FROM Branches`);
+    const result = await pool.request().query(`SELECT * FROM Branches ORDER BY ${branchSorted ? "IndexBranchId" : "IndexBranchId DESC"}`);
     if (result.rowsAffected[0] === 0) {
       console.log("Fetch data succesfully");
     }

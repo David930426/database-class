@@ -52,21 +52,21 @@ export function DeleteInventories({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Inventory</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogTitle className="md:text-3xl">Delete Inventory</AlertDialogTitle>
+          <AlertDialogDescription className="md:text-xl">
             Are you sure want to delete your inventory?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="hover:cursor-pointer">
+          <AlertDialogCancel className="hover:cursor-pointer md:text-xl md:py-5">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            className={
-              isDeleting
+            className={`
+              ${isDeleting
                 ? "bg-rose-400 hover:cursor-wait"
-                : "bg-rose-500 hover:bg-rose-600 active:bg-rose-700 hover:cursor-pointer"
-            }
+                : "bg-rose-500 hover:bg-rose-600 active:bg-rose-700 hover:cursor-pointer"} md:text-xl md:py-5
+            `}
             onClick={handleDelete}
             disabled={isDeleting}
           >

@@ -6,12 +6,19 @@ import sql from "mssql";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function Product(): Promise<Products[] | null> {
+export async function product(
+  expiredOrder: boolean,
+  productOrder: boolean
+): Promise<Products[] | null> {
   try {
     const pool = await DbConnect();
     const result = await pool.request().query(
       `SELECT p.IndexProductId, p.ProductId, p.ProductName, p.ExpiredAt, p.SectionId, s.SectionName 
-        FROM Products AS p INNER JOIN Sections AS s ON p.SectionId = s.SectionId`
+        FROM Products AS p INNER JOIN Sections AS s ON p.SectionId = s.SectionId
+        ORDER BY 
+        ${expiredOrder ? "p.ExpiredAt, " : ""}
+        ${productOrder ? "p.IndexProductId" : "p.IndexProductId DESC"}
+        `
     );
     if (result.rowsAffected[0] === 0) {
       console.error("There is no data");

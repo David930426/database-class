@@ -23,9 +23,9 @@ export default function Home() {
   return (
     <>
       <div className="p-10">
-        <h1 className="text-3xl font-bold text-zinc-400">Homepage</h1>
-        <div className="flex justify-between mt-5 bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 p-7 rounded-xl">
-          <p className="text-2xl">
+        <h1 className="text-3xl font-bold text-zinc-400 md:text-4xl">Homepage</h1>
+        <div className="flex justify-between mt-5 bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 p-7 rounded-xl md:py-12">
+          <p className="text-2xl md:text-4xl">
             Hello,{" "}
             <Link
               href={"/edit"}
@@ -35,7 +35,7 @@ export default function Home() {
             </Link>
           </p>
           <form action={logout}>
-            <ButtonPrimary type="submit" className="min-w-20" danger={true}>
+            <ButtonPrimary type="submit" className="min-w-20 md:min-w-40 md:text-xl md:py-3" danger={true}>
               Logout
             </ButtonPrimary>
           </form>
@@ -47,7 +47,7 @@ export default function Home() {
         </h1>
         <Link
           href="/product-branch"
-          className="w-45 text-md text-center bg-sky-400 hover:bg-sky-500 active:bg-sky-600 text-zinc-100 p-2 rounded-lg font-semibold"
+          className="w-45 text-md text-center bg-sky-400 hover:bg-sky-500 active:bg-sky-600 text-zinc-100 p-2 rounded-lg font-semibold md:text-xl md:w-60 md:py-3"
         >
           See All Data
         </Link>

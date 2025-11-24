@@ -1,6 +1,6 @@
 "use client";
 import { branch } from "@/action/branch";
-import { Product } from "@/action/product";
+import { product } from "@/action/product";
 import { section } from "@/action/section";
 import { BranchList } from "@/components/branch-list";
 import { LoadingPage } from "@/components/loading";
@@ -19,17 +19,26 @@ export default function ProductBranch() {
   const [dataProduct, setDataProduct] = useState<Products[] | null>(null);
   const [dataBranch, setDataBranch] = useState<Branches[] | null>(null);
   const [dataSection, setDataSection] = useState<GetSection[] | null>(null);
+
+  const [expiredOrder, setExpiredOrder] = useState(false);
+  const settingForExpiredOrder = () => setExpiredOrder(!expiredOrder);
+  const [productOrder, setProductOrder] = useState(true);
+  const settingForProductOrder = () => setProductOrder(!productOrder);
+
+  const [branchOrder, setBranchOrder] = useState(true);
+  const settingForBranchOrder = () => setBranchOrder(!branchOrder);
+
   useEffect(() => {
     const getData = async () => {
-      const theData = await Product();
-      const theBranch = await branch();
+      const theData = await product(expiredOrder, productOrder);
+      const theBranch = await branch(branchOrder);
       const theSection = await section();
       setDataProduct(theData);
       setDataBranch(theBranch);
       setDataSection(theSection);
     };
     getData();
-  }, [refresh]);
+  }, [refresh, expiredOrder, productOrder, branchOrder]);
   if (!dataProduct || !dataBranch || !dataSection) {
     return <LoadingPage />;
   }
@@ -39,22 +48,16 @@ export default function ProductBranch() {
       <Title>All list</Title>
       <ProductList
         data={dataProduct}
-        setRefresh={() => {
-          setRefreshPage();
-        }}
+        setRefresh={() => setRefreshPage()}
+        setOrder={() => settingForExpiredOrder()}
+        setProduct={() => settingForProductOrder()}
       />
       <BranchList
         data={dataBranch}
-        setRefresh={() => {
-          setRefreshPage();
-        }}
+        setRefresh={() => setRefreshPage()}
+        branchOrder={() => settingForBranchOrder()}
       />
-      <SectionList
-        data={dataSection}
-        refreshPage={() => {
-          setRefreshPage();
-        }}
-      />
+      <SectionList data={dataSection} refreshPage={() => setRefreshPage()} />
     </div>
   );
 }

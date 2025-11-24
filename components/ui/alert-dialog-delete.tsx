@@ -49,21 +49,21 @@ export function DeleteAlert({
       }}
     >
       <AlertDialogTrigger>
-        <TrashIcon className="size-6 my-6 hover:text-rose-500 active:text-rose-600 hover:cursor-pointer" />
+        <TrashIcon className="size-6 my-6 hover:text-rose-500 active:text-rose-600 hover:cursor-pointer md:size-8" />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete {tableName ? tableName : "Item"}</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogTitle className="md:text-3xl">Delete {tableName ? tableName : "Item"}</AlertDialogTitle>
+          <AlertDialogDescription className="md:text-xl">
             Are you sure want to delete {name ? name : "the item"}?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="hover:cursor-pointer">
+          <AlertDialogCancel className="hover:cursor-pointer md:text-xl md:py-5">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            className="bg-rose-500 hover:bg-rose-600 active:bg-rose-700 hover:cursor-pointer"
+            className="bg-rose-500 hover:bg-rose-600 active:bg-rose-700 hover:cursor-pointer md:text-xl md:py-5"
             onClick={clickDelete}
           >
             {isDeleting ? <Spinner className="size-5" /> : "Sure"}

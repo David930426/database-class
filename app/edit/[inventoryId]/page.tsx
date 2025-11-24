@@ -42,9 +42,12 @@ export default function EditInventoryPage() {
 
   return (
     <div className="px-10 pt-5">
-      <Back href="/"/>
+      <Back href="/" />
       <Title>Edit Inventory</Title>
-      <form action={editInvAction} className="px-2 mt-5 text-xl">
+      <form
+        action={editInvAction}
+        className="px-2 mt-5 text-xl md:text-2xl md:mt-10"
+      >
         <input
           type="number"
           name="inventoryId"
@@ -115,9 +118,11 @@ export default function EditInventoryPage() {
           </tbody>
         </table>
         <p className="text-rose-500 text-sm mt-5">{state.message}</p>
-        <ButtonPrimary type="submit" className="w-full mt-10 mb-5">
-          Edit Inventory
-        </ButtonPrimary>
+        <div className="md:flex md:justify-end">
+          <ButtonPrimary type="submit" className="w-full mt-10 mb-5 md:w-60">
+            Edit Inventory
+          </ButtonPrimary>
+        </div>
       </form>
     </div>
   );

@@ -12,7 +12,7 @@ import { useActionState, useEffect, useState } from "react";
 export default function Page() {
   const [product, setProduct] = useState<GetProducts[] | null>(null);
   const [branch, setBranch] = useState<GetBranches[] | null>(null);
-  const [state, addInvAction] = useActionState(addInventory, initialState)
+  const [state, addInvAction] = useActionState(addInventory, initialState);
   useEffect(() => {
     const getData = async () => {
       const dataProduct = await getProduct();
@@ -29,7 +29,10 @@ export default function Page() {
     <div className="px-10 pt-5">
       <Back href="/" />
       <Title>Add Iventory</Title>
-      <form action={addInvAction} className="px-2 mt-5 text-xl">
+      <form
+        action={addInvAction}
+        className="px-2 mt-5 text-xl md:text-2xl md:mt-10"
+      >
         <table>
           <tbody>
             <tr>
@@ -91,9 +94,11 @@ export default function Page() {
           </tbody>
         </table>
         <p className="text-rose-500 text-sm mt-5">{state.message}</p>
-        <ButtonPrimary type="submit" className="w-full mt-10 mb-5">
-          Add Inventory
-        </ButtonPrimary>
+        <div className="md:flex md:justify-end">
+          <ButtonPrimary type="submit" className="w-full mt-10 mb-5 md:w-50">
+            Add Inventory
+          </ButtonPrimary>
+        </div>
       </form>
     </div>
   );
