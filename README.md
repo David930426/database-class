@@ -114,21 +114,22 @@ ProductName NVARCHAR(100) NOT NULL,
 ExpiredAt DATE NOT NULL,
 SectionId INT NOT NULL,
 PRIMARY KEY (IndexProductId),
-FOREIGN KEY (SectionId) REFERENCES Sections(SectionId)
+FOREIGN KEY (SectionId) REFERENCES Sections(SectionId) ON DELETE CASCADE
 )
 
 ## Create Inventories
 
 CREATE TABLE Inventories (
-	InventoryId BIGINT IDENTITY(1,1) NOT NULL,
-	ProductId BIGINT NOT NULL,
-	BranchId INT NOT NULL,
-	Quantity INT DEFAULT 0,
-	UpdatedAt DATETIME DEFAULT GETDATE(),
+InventoryId BIGINT IDENTITY(1,1) NOT NULL,
+ProductId BIGINT NOT NULL,
+BranchId INT NOT NULL,
+Quantity INT DEFAULT 0,
+UpdatedAt DATETIME DEFAULT GETDATE(),
 
-	PRIMARY KEY (InventoryId),
-	FOREIGN KEY (ProductId) REFERENCES Products(IndexProductId),
-	FOREIGN KEY (BranchId) REFERENCES Branches(IndexBranchId),
+    PRIMARY KEY (InventoryId),
+    FOREIGN KEY (ProductId) REFERENCES Products(IndexProductId) ON DELETE CASCADE,
+    FOREIGN KEY (BranchId) REFERENCES Branches(IndexBranchId) ON DELETE CASCADE,
 
-	UNIQUE(ProductId, BranchId)
+    UNIQUE(ProductId, BranchId)
+
 )

@@ -8,18 +8,30 @@ import { redirect } from "next/navigation";
 
 export async function product(
   expiredOrder: boolean,
-  productOrder: boolean
+  productOrder: boolean,
+  setProductSearch: string
 ): Promise<Products[] | null> {
   try {
     const pool = await DbConnect();
-    const result = await pool.request().query(
-      `SELECT p.IndexProductId, p.ProductId, p.ProductName, p.ExpiredAt, p.SectionId, s.SectionName 
+    const result = await pool
+      .request()
+      .input("SearchTerm", sql.NVarChar, setProductSearch)
+      .query(
+        `SELECT p.IndexProductId, p.ProductId, p.ProductName, p.ExpiredAt, p.SectionId, s.SectionName 
         FROM Products AS p INNER JOIN Sections AS s ON p.SectionId = s.SectionId
+        ${
+          setProductSearch &&
+          `WHERE
+            p.ProductId LIKE '%' + @SearchTerm + '%' 
+            OR p.ProductName LIKE '%' + @SearchTerm + '%' 
+            OR s.SectionName LIKE '%' + @SearchTerm + '%'
+          `
+        }
         ORDER BY 
         ${expiredOrder ? "p.ExpiredAt, " : ""}
         ${productOrder ? "p.IndexProductId" : "p.IndexProductId DESC"}
         `
-    );
+      );
     if (result.rowsAffected[0] === 0) {
       console.error("There is no data");
       return null;

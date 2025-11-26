@@ -28,17 +28,29 @@ export default function ProductBranch() {
   const [branchOrder, setBranchOrder] = useState(true);
   const settingForBranchOrder = () => setBranchOrder(!branchOrder);
 
+  const [productSearch, setProductSearch] = useState("");
+  const [branchSearch, setBranchSearch] = useState("");
+  const [sectionSearch, setSectionSearch] = useState("");
+
   useEffect(() => {
     const getData = async () => {
-      const theData = await product(expiredOrder, productOrder);
-      const theBranch = await branch(branchOrder);
-      const theSection = await section();
+      const theData = await product(expiredOrder, productOrder, productSearch);
+      const theBranch = await branch(branchOrder, branchSearch);
+      const theSection = await section(sectionSearch);
       setDataProduct(theData);
       setDataBranch(theBranch);
       setDataSection(theSection);
     };
     getData();
-  }, [refresh, expiredOrder, productOrder, branchOrder]);
+  }, [
+    refresh,
+    expiredOrder,
+    productOrder,
+    branchOrder,
+    productSearch,
+    branchSearch,
+    sectionSearch,
+  ]);
   if (!dataProduct || !dataBranch || !dataSection) {
     return <LoadingPage />;
   }
@@ -51,13 +63,19 @@ export default function ProductBranch() {
         setRefresh={() => setRefreshPage()}
         setOrder={() => settingForExpiredOrder()}
         setProduct={() => settingForProductOrder()}
+        setProductSearch={setProductSearch}
       />
       <BranchList
         data={dataBranch}
         setRefresh={() => setRefreshPage()}
         branchOrder={() => settingForBranchOrder()}
+        setBranchSearch={setBranchSearch}
       />
-      <SectionList data={dataSection} refreshPage={() => setRefreshPage()} />
+      <SectionList
+        data={dataSection}
+        refreshPage={() => setRefreshPage()}
+        setSectionSearch={setSectionSearch}
+      />
     </div>
   );
 }

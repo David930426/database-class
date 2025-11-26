@@ -9,13 +9,20 @@ import { deleteSection } from "@/action/section";
 export function SectionList({
   data,
   refreshPage,
+  setSectionSearch,
 }: {
   data: GetSection[];
   refreshPage: () => void;
+  setSectionSearch: (input: string) => void;
 }) {
   return (
     <>
-      <TitleTable link="/product-branch/add-section">Sections</TitleTable>
+      <TitleTable
+        setSearchInput={setSectionSearch}
+        link="/product-branch/add-section"
+      >
+        Sections
+      </TitleTable>
       <table className="w-full">
         <thead className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 md:text-2xl">
           <tr>

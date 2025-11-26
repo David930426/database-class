@@ -12,15 +12,22 @@ export function BranchList({
   data,
   setRefresh,
   branchOrder,
+  setBranchSearch,
 }: {
   data: Branches[];
   setRefresh: () => void;
   branchOrder: () => void;
+  setBranchSearch: (input: string) => void;
 }) {
   const [orderByBranch, setOrderByBranch] = useState(true);
   return (
     <>
-      <TitleTable link="/product-branch/add-branch">Branches</TitleTable>
+      <TitleTable
+        link="/product-branch/add-branch"
+        setSearchInput={setBranchSearch}
+      >
+        Branches
+      </TitleTable>
       <table className="w-full">
         <thead className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 md:text-2xl">
           <tr>

@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { DbConnect } from "@/lib/db";
 import { FormState, GetSection } from "@/lib/definitions";
 import { AddSectionSchema, EditSectionSchema } from "@/lib/zod";
@@ -6,12 +6,24 @@ import sql from "mssql";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function section(): Promise<GetSection[] | null> {
+export async function section(
+  setSectionSearch: string
+): Promise<GetSection[] | null> {
   try {
     const pool = await DbConnect();
-    const result = await pool.request().query(`SELECT * FROM Sections`);
+    const result = await pool
+      .request()
+      .input("SearchTerm", sql.NVarChar, setSectionSearch)
+      .query(
+        `SELECT * FROM Sections ${
+          setSectionSearch &&
+          `WHERE
+            SectionName LIKE '%' + @SearchTerm + '%'
+          `
+        }`
+      );
     if (result.rowsAffected[0] === 0) return null;
-    return result.recordset as GetSection[]
+    return result.recordset as GetSection[];
   } catch (err) {
     console.error(err);
     return null;

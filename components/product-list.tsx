@@ -14,11 +14,13 @@ export function ProductList({
   setRefresh,
   setOrder,
   setProduct,
+  setProductSearch,
 }: {
   data: Products[];
   setRefresh: () => void;
   setOrder: () => void;
   setProduct: () => void;
+  setProductSearch: (input: string) => void;
 }) {
   const [expProduct, setExpProduct] = useState(false);
   const [productOrder, setProductOrder] = useState(true);
@@ -31,7 +33,12 @@ export function ProductList({
 
   return (
     <>
-      <TitleTable link="/product-branch/add-product">Products</TitleTable>
+      <TitleTable
+        link="/product-branch/add-product"
+        setSearchInput={setProductSearch}
+      >
+        Products
+      </TitleTable>
       <table className="w-full">
         <thead className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 md:text-2xl">
           <tr>

@@ -6,10 +6,27 @@ import sql from "mssql";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function branch(branchSorted: boolean): Promise<Branches[] | null> {
+export async function branch(
+  branchSorted: boolean,
+  setBranchSearch: string
+): Promise<Branches[] | null> {
   try {
     const pool = await DbConnect();
-    const result = await pool.request().query(`SELECT * FROM Branches ORDER BY ${branchSorted ? "IndexBranchId" : "IndexBranchId DESC"}`);
+    const result = await pool
+      .request()
+      .input("SearchTerm", sql.NVarChar, setBranchSearch).query(`
+        SELECT * FROM Branches
+        ${
+          setBranchSearch &&
+          `WHERE 
+            BranchId LIKE '%' + @SearchTerm + '%' 
+            OR BranchName LIKE '%' + @SearchTerm + '%' 
+            OR Location LIKE '%' + @SearchTerm + '%'
+          `
+        }
+        ORDER BY 
+        ${branchSorted ? "IndexBranchId" : "IndexBranchId DESC"}
+        `);
     if (result.rowsAffected[0] === 0) {
       console.log("Fetch data succesfully");
     }
