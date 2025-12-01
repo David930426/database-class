@@ -69,6 +69,7 @@ export type Products = {
   ExpiredAt: Date;
   SectionId: number;
   SectionName: string;
+  Count?: number;
 }
 
 export type EditProducts = {

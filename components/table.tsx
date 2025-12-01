@@ -1,6 +1,10 @@
 "use client";
 
-import { getDataItem } from "@/action/getData";
+import {
+  allInventoriesNumber,
+  getDataItem,
+  totalShowInventory,
+} from "@/action/getData";
 import { GetItem } from "@/lib/definitions";
 import { useEffect, useState } from "react";
 import { LoadingPage } from "@/components/loading";
@@ -9,6 +13,7 @@ import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/solid";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { DeleteInventories } from "@/components/delete-inventories";
 import { SearchPagination } from "@/components/ui/search-pagination";
+import { TableFooter } from "@/components/ui/footer-table";
 
 export function Table() {
   const [data, setData] = useState<GetItem[] | null>(null);
@@ -23,6 +28,9 @@ export function Table() {
   const [quantity15Less, setQuantity15Less] = useState(false);
 
   const [searchInput, setSearchInput] = useState("");
+
+  const [allNumberInv, setAllNumberInv] = useState(0);
+  const [searchNumberInv, setSearchNumberInv] = useState(0);
 
   const refresh = () => {
     setRefreshData(refreshData + 1);
@@ -46,7 +54,17 @@ export function Table() {
         quantity30More,
         searchInput
       );
+      const numberData = await allInventoriesNumber();
+      const searchNumberData = await totalShowInventory(
+        quantity15Less,
+        quantity15to30,
+        quantity30More,
+        searchInput
+      );
+
       setData(getData);
+      setAllNumberInv(numberData);
+      setSearchNumberInv(searchNumberData);
     };
     searchData();
   }, [
@@ -68,11 +86,11 @@ export function Table() {
   return (
     <>
       <div className="px-10 flex justify-between mb-3">
-        <div className="flex gap-2">
+        <div className="flex gap-2 md:pl-5">
           <button
             className={`${
               quantity15to30 || quantity15Less ? "bg-zinc-400" : "bg-green-400"
-            } hover:bg-green-500 active:bg-green-600 hover:cursor-pointer p-2 rounded-xl text-zinc-100 transition-all duration-300`}
+            } hover:bg-green-500 active:bg-green-600 hover:cursor-pointer p-2 rounded-xl text-zinc-100 transition-all duration-300 md:p-3 md:text-xl`}
             onClick={() => {
               if (quantity15to30 || quantity15Less) {
                 setQuantity15Less(false);
@@ -86,7 +104,7 @@ export function Table() {
           <button
             className={`${
               quantity30More || quantity15Less ? "bg-zinc-400" : "bg-amber-400"
-            } hover:bg-amber-500 active:bg-amber-600 hover:cursor-pointer p-2 rounded-xl text-zinc-100 transition-all duration-300`}
+            } hover:bg-amber-500 active:bg-amber-600 hover:cursor-pointer p-2 rounded-xl text-zinc-100 transition-all duration-300 md:p-3 md:text-xl`}
             onClick={() => {
               if (quantity30More || quantity15Less) {
                 setQuantity15Less(false);
@@ -100,7 +118,7 @@ export function Table() {
           <button
             className={`${
               quantity15to30 || quantity30More ? "bg-zinc-400" : "bg-rose-500"
-            } hover:bg-rose-600 active:bg-rose-700 hover:cursor-pointer p-2 rounded-xl text-zinc-100 transition-all duration-300`}
+            } hover:bg-rose-600 active:bg-rose-700 hover:cursor-pointer p-2 rounded-xl text-zinc-100 transition-all duration-300 md:p-3 md:text-xl`}
             onClick={() => {
               if (quantity15to30 || quantity30More) {
                 setQuantity30More(false);
@@ -250,6 +268,11 @@ export function Table() {
           </table>
         )}
       </div>
+      <TableFooter
+        numberOfItem={searchNumberInv}
+        totalItem={allNumberInv}
+        classname="mr-10 mt-10"
+      />
     </>
   );
 }

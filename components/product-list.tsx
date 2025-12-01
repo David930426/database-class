@@ -8,15 +8,20 @@ import { deleteProduct } from "@/action/product";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
+import { TableFooter } from "@/components/ui/footer-table";
 
 export function ProductList({
   data,
+  totalProduct,
+  searchProduct,
   setRefresh,
   setOrder,
   setProduct,
   setProductSearch,
 }: {
-  data: Products[];
+  data: Products[] | null;
+  totalProduct: number;
+  searchProduct: number;
   setRefresh: () => void;
   setOrder: () => void;
   setProduct: () => void;
@@ -71,41 +76,53 @@ export function ProductList({
             <th className="rounded-r-xl w-20"></th>
           </tr>
         </thead>
-        <tbody className="capitalize divide-y divide-zinc-200 text-center md:text-xl">
-          {data.map((item) => {
-            return (
-              <tr key={item.ProductId}>
-                <td className="h-20">{item.ProductId}</td>
-                <td>{item.ProductName}</td>
-                <td
-                  className={
-                    item.ExpiredAt < thirtyDaysFromNow
-                      ? item.ExpiredAt < nowDate
-                        ? "text-rose-500 font-semibold"
-                        : "text-amber-500 font-semibold"
-                      : ""
-                  }
-                >
-                  {item.ExpiredAt.toLocaleDateString()}
-                </td>
-                <td>{item.SectionName}</td>
-                <td className="flex gap-2 justify-items-center-safe">
-                  <Link href={`/product-branch/${item.IndexProductId}`}>
-                    <PencilSquareIcon className="size-6 my-6 hover:text-amber-400 active:text-amber-500 md:size-8" />
-                  </Link>
-                  <DeleteAlert
-                    indexId={item.IndexProductId}
-                    setRefresh={setRefresh}
-                    name={item.ProductName}
-                    deleteAction={deleteProduct}
-                    tableName="Product"
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
+
+        {!data ? (
+          <h1 className="text-3xl text-center mt-10 mb-10 md:text-5xl">
+            There is no Inventory data
+          </h1>
+        ) : (
+          <tbody className="capitalize divide-y divide-zinc-200 text-center md:text-xl">
+            {data.map((item) => {
+              return (
+                <tr key={item.ProductId}>
+                  <td className="h-20">{item.ProductId}</td>
+                  <td>{item.ProductName}</td>
+                  <td
+                    className={
+                      item.ExpiredAt < thirtyDaysFromNow
+                        ? item.ExpiredAt < nowDate
+                          ? "text-rose-500 font-semibold"
+                          : "text-amber-500 font-semibold"
+                        : ""
+                    }
+                  >
+                    {item.ExpiredAt.toLocaleDateString()}
+                  </td>
+                  <td>{item.SectionName}</td>
+                  <td className="flex gap-2 justify-items-center-safe">
+                    <Link href={`/product-branch/${item.IndexProductId}`}>
+                      <PencilSquareIcon className="size-6 my-6 hover:text-amber-400 active:text-amber-500 md:size-8" />
+                    </Link>
+                    <DeleteAlert
+                      indexId={item.IndexProductId}
+                      setRefresh={setRefresh}
+                      name={item.ProductName}
+                      deleteAction={deleteProduct}
+                      tableName="Product"
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        )}
       </table>
+      <TableFooter
+        data={data === null}
+        numberOfItem={searchProduct}
+        totalItem={totalProduct}
+      />
     </>
   );
 }

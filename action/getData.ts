@@ -144,3 +144,82 @@ export async function getSection(): Promise<GetSection[] | null> {
     return null;
   }
 }
+
+export async function allInventoriesNumber(): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .query(`SELECT COUNT(*) AS TotalInventory FROM Inventories;`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalInventory;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}
+
+export async function totalShowInventory(
+  quantityLess15: boolean,
+  quantity15To30: boolean,
+  quantityOver30: boolean,
+  searchTerm: string
+): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .input("SearchTerm", sql.NVarChar, searchTerm)
+      .query(`SELECT COUNT(*) AS TotalCount 
+              FROM Inventories AS i INNER JOIN Products AS p   
+                ON i.ProductId = p.IndexProductId 
+     
+              INNER JOIN Branches AS b
+                ON i.BranchId = b.IndexBranchId 
+                
+              INNER JOIN Sections AS s 
+                ON p.SectionId = s.SectionId
+
+              -- START: Dynamic WHERE Clause (Exact copy of your filtering logic, excluding ORDER BY)
+              ${
+                quantityOver30
+                  ? "WHERE i.Quantity > 30"
+                  : quantity15To30
+                  ? "WHERE i.Quantity <= 30 AND i.Quantity > 15"
+                  : quantityLess15
+                  ? "WHERE i.Quantity < 15"
+                  : ""
+              }
+
+              ${
+                quantityLess15 || quantity15To30 || quantityOver30
+                  ? `
+                      AND (
+                        p.ProductId LIKE '%' + @SearchTerm + '%' 
+                        OR p.ProductName LIKE '%' + @SearchTerm + '%' 
+                        OR s.SectionName LIKE '%' + @SearchTerm + '%' 
+                        OR b.BranchId LIKE '%' + @SearchTerm + '%' 
+                        OR b.BranchName LIKE '%' + @SearchTerm + '%' 
+                        OR b.Location LIKE '%' + @SearchTerm + '%'
+                      )`
+                  : `WHERE
+                        p.ProductId LIKE '%' + @SearchTerm + '%' 
+                        OR p.ProductName LIKE '%' + @SearchTerm + '%' 
+                        OR s.SectionName LIKE '%' + @SearchTerm + '%' 
+                        OR b.BranchId LIKE '%' + @SearchTerm + '%' 
+                        OR b.BranchName LIKE '%' + @SearchTerm + '%' 
+                        OR b.Location LIKE '%' + @SearchTerm + '%'`
+              }`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalCount;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}

@@ -30,6 +30,51 @@ export async function section(
   }
 }
 
+export async function totalSection(): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .query(`SELECT COUNT(*) AS TotalSection FROM Sections;`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalSection;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}
+
+export async function totalShowSection(
+  setSectionSearch: string
+): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .input("SearchTerm", sql.NVarChar, setSectionSearch)
+      .query(`SELECT COUNT(*) AS TotalCount 
+          FROM Sections
+          ${
+            setSectionSearch
+              ? `WHERE 
+                  SectionName LIKE '%' + @SearchTerm + '%'
+                `
+              : ""
+          }`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalCount;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}
+
 export async function deleteSection(sectionId: number) {
   try {
     const pool = await DbConnect();

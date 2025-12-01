@@ -5,13 +5,18 @@ import Link from "next/link";
 import { DeleteAlert } from "@/components/ui/alert-dialog-delete";
 import { GetSection } from "@/lib/definitions";
 import { deleteSection } from "@/action/section";
+import { TableFooter } from "@/components/ui/footer-table";
 
 export function SectionList({
   data,
+  searchNumberSection,
+  allNumberSection,
   refreshPage,
   setSectionSearch,
 }: {
-  data: GetSection[];
+  data: GetSection[] | null;
+  searchNumberSection: number;
+  allNumberSection: number;
   refreshPage: () => void;
   setSectionSearch: (input: string) => void;
 }) {
@@ -30,26 +35,37 @@ export function SectionList({
             <th className="rounded-r-xl md:h-20 md:w-1/2"></th>
           </tr>
         </thead>
-        <tbody className="capitalize divide-y divide-zinc-200 text-center md:text-xl">
-          {data.map((item) => (
-            <tr key={item.SectionId}>
-              <td>{item.SectionName}</td>
-              <td className="flex gap-4 justify-items-center-safe md:justify-center">
-                <Link href={`/product-branch/edit-section/${item.SectionId}`}>
-                  <PencilSquareIcon className="size-6 my-6 hover:text-amber-400 active:text-amber-500 md:size-8" />
-                </Link>
-                <DeleteAlert
-                  indexId={item.SectionId}
-                  name={item.SectionName}
-                  tableName="Section"
-                  deleteAction={deleteSection}
-                  setRefresh={refreshPage}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        {!data ? (
+          <h1 className="text-3xl text-center mt-10 mb-10 md:text-5xl">
+            There is no Inventory data
+          </h1>
+        ) : (
+          <tbody className="capitalize divide-y divide-zinc-200 text-center md:text-xl">
+            {data.map((item) => (
+              <tr key={item.SectionId}>
+                <td>{item.SectionName}</td>
+                <td className="flex gap-4 justify-items-center-safe md:justify-center">
+                  <Link href={`/product-branch/edit-section/${item.SectionId}`}>
+                    <PencilSquareIcon className="size-6 my-6 hover:text-amber-400 active:text-amber-500 md:size-8" />
+                  </Link>
+                  <DeleteAlert
+                    indexId={item.SectionId}
+                    name={item.SectionName}
+                    tableName="Section"
+                    deleteAction={deleteSection}
+                    setRefresh={refreshPage}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        )}
       </table>
+      <TableFooter
+        data={data === null}
+        numberOfItem={searchNumberSection}
+        totalItem={allNumberSection}
+      />
     </>
   );
 }

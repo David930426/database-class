@@ -37,6 +37,53 @@ export async function branch(
   }
 }
 
+export async function totalBranch(): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .query(`SELECT COUNT(*) AS TotalBranch FROM Branches;`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalBranch;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}
+
+export async function totalShowBranch(
+  setBranchSearch: string
+): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .input("SearchTerm", sql.NVarChar, setBranchSearch)
+      .query(`SELECT COUNT(*) AS TotalCount 
+          FROM Branches
+          ${
+            setBranchSearch
+              ? `WHERE 
+                BranchId LIKE '%' + @SearchTerm + '%' 
+                OR BranchName LIKE '%' + @SearchTerm + '%' 
+                OR Location LIKE '%' + @SearchTerm + '%'
+                `
+              : ""
+          }`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalCount;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}
+
 export async function deleteBranch(indexBranchId: number) {
   try {
     const pool = await DbConnect();

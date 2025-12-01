@@ -43,6 +43,53 @@ export async function product(
   }
 }
 
+export async function totalProduct(): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .query(`SELECT COUNT(*) AS TotalProducts FROM Products;`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalProducts;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}
+
+export async function totalShowProduct(
+  setProductSearch: string
+): Promise<number> {
+  try {
+    const pool = await DbConnect();
+    const result = await pool
+      .request()
+      .input("SearchTerm", sql.NVarChar, setProductSearch)
+      .query(`SELECT COUNT(*) AS TotalCount 
+          FROM Products AS p INNER JOIN Sections AS s ON p.SectionId = s.SectionId
+          ${
+            setProductSearch
+              ? `WHERE
+                p.ProductId LIKE '%' + @SearchTerm + '%' 
+                OR p.ProductName LIKE '%' + @SearchTerm + '%' 
+                OR s.SectionName LIKE '%' + @SearchTerm + '%'
+                `
+              : ""
+          }`);
+    if (result.recordset.length > 0) {
+      const count = result.recordset[0].TotalCount;
+      return count || 0;
+    }
+    return 0;
+  } catch (err) {
+    console.error(err);
+    return 0;
+  }
+}
+
 export async function addProduct(prevState: FormState, formData: FormData) {
   const rawData = Object.fromEntries(formData.entries());
   try {

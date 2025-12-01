@@ -1,7 +1,7 @@
 "use client";
-import { branch } from "@/action/branch";
-import { product } from "@/action/product";
-import { section } from "@/action/section";
+import { branch, totalBranch, totalShowBranch } from "@/action/branch";
+import { product, totalProduct, totalShowProduct } from "@/action/product";
+import { section, totalSection, totalShowSection } from "@/action/section";
 import { BranchList } from "@/components/branch-list";
 import { LoadingPage } from "@/components/loading";
 import { ProductList } from "@/components/product-list";
@@ -32,14 +32,42 @@ export default function ProductBranch() {
   const [branchSearch, setBranchSearch] = useState("");
   const [sectionSearch, setSectionSearch] = useState("");
 
+  const [numberProduct, setNumberProduct] = useState(0);
+  const [searchNumberProduct, setSearchNumberProduct] = useState(0);
+
+  const [numberBranch, setNumberBranch] = useState(0);
+  const [searchNumberBranch, setSearchNumberBranch] = useState(0);
+
+  const [numberSection, setNumberSection] = useState(0);
+  const [searchNumberSection, setSearchNumberSection] = useState(0);
+
   useEffect(() => {
     const getData = async () => {
       const theData = await product(expiredOrder, productOrder, productSearch);
       const theBranch = await branch(branchOrder, branchSearch);
       const theSection = await section(sectionSearch);
+
+      const numberAllProduct = await totalProduct();
+      const numberSearchProduct = await totalShowProduct(productSearch);
+
+      const numberAllBranch = await totalBranch();
+      const numberSearchBranch = await totalShowBranch(branchSearch);
+
+      const numberAllSection = await totalSection();
+      const numberSearchSection = await totalShowSection(sectionSearch);
+
       setDataProduct(theData);
       setDataBranch(theBranch);
       setDataSection(theSection);
+
+      setNumberProduct(numberAllProduct);
+      setSearchNumberProduct(numberSearchProduct);
+
+      setNumberBranch(numberAllBranch);
+      setSearchNumberBranch(numberSearchBranch);
+
+      setNumberSection(numberAllSection);
+      setSearchNumberSection(numberSearchSection);
     };
     getData();
   }, [
@@ -51,7 +79,7 @@ export default function ProductBranch() {
     branchSearch,
     sectionSearch,
   ]);
-  if (!dataProduct || !dataBranch || !dataSection) {
+  if (!dataProduct && !dataBranch && !dataSection) {
     return <LoadingPage />;
   }
   return (
@@ -60,6 +88,8 @@ export default function ProductBranch() {
       <Title>All list</Title>
       <ProductList
         data={dataProduct}
+        totalProduct={numberProduct}
+        searchProduct={searchNumberProduct}
         setRefresh={() => setRefreshPage()}
         setOrder={() => settingForExpiredOrder()}
         setProduct={() => settingForProductOrder()}
@@ -67,12 +97,16 @@ export default function ProductBranch() {
       />
       <BranchList
         data={dataBranch}
+        numberOfBranch={searchNumberBranch}
+        totalBranch={numberBranch}
         setRefresh={() => setRefreshPage()}
         branchOrder={() => settingForBranchOrder()}
         setBranchSearch={setBranchSearch}
       />
       <SectionList
         data={dataSection}
+        searchNumberSection={searchNumberSection}
+        allNumberSection={numberSection}
         refreshPage={() => setRefreshPage()}
         setSectionSearch={setSectionSearch}
       />
