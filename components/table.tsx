@@ -229,14 +229,14 @@ export function Table() {
                     <td>
                       <span
                         className={`text-zinc-100  font-bold px-3 py-1 rounded-full ${
-                          item.Quantity < 15
+                          item.StockQuantity < 15
                             ? "bg-rose-500"
-                            : item.Quantity < 30
+                            : item.StockQuantity <= 30
                             ? "bg-yellow-400"
                             : "bg-green-400"
                         }`}
                       >
-                        {item.Quantity}
+                        {item.StockQuantity}
                       </span>
                     </td>
                     <td>

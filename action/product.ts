@@ -182,10 +182,9 @@ export async function editProduct(prevState: FormState, formData: FormData) {
 export async function deleteProduct(indexProductId: number) {
   try {
     const pool = await DbConnect();
-    const result = await pool
-      .request()
-      .input("IndexProductId", sql.BigInt, indexProductId)
-      .query(`DELETE FROM Products WHERE IndexProductId = @IndexProductId`);
+    const request = pool.request();
+    request.input("IndexProductId", sql.BigInt, indexProductId);
+    const result = await request.execute("SP_DeleteProduct");
     if (result.rowsAffected[0] === 0) {
       console.log("Delete inventory unsuccessfull");
     }

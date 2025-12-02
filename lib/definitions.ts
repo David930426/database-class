@@ -33,7 +33,7 @@ export type GetItem = {
   ProductId: string;
   ProductName: string;
   ExpiredAt: Date;
-  Quantity: number;
+  StockQuantity: number;
   SectionName: string;
   BranchId: string;
   BranchName: string;

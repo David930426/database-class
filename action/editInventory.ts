@@ -54,25 +54,14 @@ export async function editInventory(
       };
     }
 
-    const result = await pool
+    const result = pool
       .request()
       .input("InventoryId", sql.BigInt, parsedData.inventoryId)
-      .input(
-        "ProductId",
-        sql.BigInt,
-        searchProductIndexId.recordset[0].IndexProductId
-      )
-      .input(
-        "BranchId",
-        sql.Int,
-        searchBranchIndexId.recordset[0].IndexBranchId
-      )
-      .input("Quantity", sql.Int, parsedData.quantity)
-      .query(
-        `UPDATE Inventories 
-        SET ProductId = @ProductId, BranchId = @BranchId, Quantity = @Quantity 
-        WHERE InventoryId = @InventoryId`
-      );
+      .input("ProductId", sql.BigInt, searchProductIndexId.recordset[0].IndexProductId)
+      .input("BranchId", sql.Int, searchBranchIndexId.recordset[0].IndexBranchId)
+      .input("NewQuantity", sql.Int, parsedData.quantity);
+
+    await result.execute("SP_UpdateInventoryRecord");
     if (!result) {
       return {
         success: false,

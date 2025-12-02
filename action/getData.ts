@@ -45,60 +45,72 @@ export async function getDataItem(
 ): Promise<GetItem[] | null> {
   try {
     const pool = await DbConnect();
+    const selectStatement = `
+      SELECT InventoryId, ProductId, ProductName, ExpiredAt, SectionName, 
+             StockQuantity, BranchId, BranchName, Location, IndexProductId, IndexBranchId
+      FROM V_FullInventoryDetails
+    `;
+
+    let whereClause = "";
+    let searchCondition = "";
+
+    if (searchTerm && searchTerm.trim().length > 0) {
+      searchCondition = `
+            (
+              ProductId LIKE '%' + @SearchTerm + '%' 
+              OR ProductName LIKE '%' + @SearchTerm + '%' 
+              OR SectionName LIKE '%' + @SearchTerm + '%' 
+              OR BranchId LIKE '%' + @SearchTerm + '%' 
+              OR BranchName LIKE '%' + @SearchTerm + '%' 
+              OR Location LIKE '%' + @SearchTerm + '%'
+            )
+        `;
+    }
+
+    let quantityCondition = "";
+    if (quantityOver30) {
+      quantityCondition = "StockQuantity > 30";
+    } else if (quantity15To30) {
+      quantityCondition = "StockQuantity <= 30 AND StockQuantity > 15";
+    } else if (quantityLess15) {
+      quantityCondition = "StockQuantity < 15";
+    }
+
+    if (quantityCondition.length > 0 || searchCondition.length > 0) {
+      whereClause = "WHERE ";
+
+      if (quantityCondition.length > 0) {
+        whereClause += quantityCondition;
+      }
+
+      if (searchCondition.length > 0) {
+        if (quantityCondition.length > 0) {
+          whereClause += " AND ";
+        }
+        whereClause += searchCondition;
+      }
+    }
+    let orderByClause = "";
+    if (orderExpired) {
+      orderByClause = "ORDER BY ExpiredAt, StockQuantity DESC";
+    } else if (orderQuantity) {
+      orderByClause = "ORDER BY StockQuantity, ExpiredAt";
+    } else {
+      orderByClause = `
+          ORDER BY ${
+            orderProduct ? "IndexProductId" : "IndexProductId DESC"
+          }, ${orderBranch ? "IndexBranchId" : "IndexBranchId DESC"}
+        `;
+    }
+
     const result = await pool
       .request()
       .input("SearchTerm", sql.NVarChar, searchTerm).query(`
-      SELECT i.InventoryId, p.ProductId, p.ProductName, p.ExpiredAt, s.SectionName, i.Quantity, b.BranchId, b.BranchName, b.Location, p.IndexProductId, b.IndexBranchId
-      
-      FROM Inventories AS i INNER JOIN Products AS p ON i.ProductId = p.IndexProductId 
-        
-      INNER JOIN Branches AS b
-        ON i.BranchId = b.IndexBranchId 
-        
-      INNER JOIN Sections AS s 
-        ON p.SectionId = s.SectionId
-      
-      ${
-        quantityOver30
-          ? "WHERE i.Quantity > 30"
-          : quantity15To30
-          ? "WHERE i.Quantity <= 30 AND i.Quantity > 15"
-          : quantityLess15
-          ? "WHERE i.Quantity < 15"
-          : ""
-      }
+        ${selectStatement}
+        ${whereClause}
+        ${orderByClause}
+      `);
 
-      ${
-        quantityLess15 || quantity15To30 || quantityOver30
-          ? `
-            AND (p.ProductId LIKE '%' + @SearchTerm + '%' 
-            OR p.ProductName LIKE '%' + @SearchTerm + '%' 
-            OR s.SectionName LIKE '%' + @SearchTerm + '%' 
-            OR  b.BranchId LIKE '%' + @SearchTerm + '%' 
-            OR b.BranchName LIKE '%' + @SearchTerm + '%' 
-            OR b.Location LIKE '%' + @SearchTerm + '%')
-          `
-          : `WHERE
-            p.ProductId LIKE '%' + @SearchTerm + '%' 
-            OR p.ProductName LIKE '%' + @SearchTerm + '%' 
-            OR s.SectionName LIKE '%' + @SearchTerm + '%' 
-            OR  b.BranchId LIKE '%' + @SearchTerm + '%' 
-            OR b.BranchName LIKE '%' + @SearchTerm + '%' 
-            OR b.Location LIKE '%' + @SearchTerm + '%'
-          `
-      }
-      
-      ${
-        orderExpired
-          ? "ORDER BY p.ExpiredAt, i.Quantity DESC"
-          : orderQuantity
-          ? "ORDER BY i.Quantity, p.ExpiredAt"
-          : `
-      ORDER BY ${
-        orderProduct ? "p.IndexProductId" : "p.IndexProductId DESC"
-      }, ${orderBranch ? "b.IndexBranchId" : "b.IndexBranchId DESC"}`
-      };
-        `);
     return result.recordset as GetItem[];
   } catch (err) {
     console.error(err);

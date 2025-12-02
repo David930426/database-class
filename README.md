@@ -133,3 +133,67 @@ UpdatedAt DATETIME DEFAULT GETDATE(),
     UNIQUE(ProductId, BranchId)
 
 )
+
+## Create view Inventories
+
+CREATE VIEW V_FullInventoryDetails AS
+SELECT
+i.InventoryId,
+p.IndexProductId,
+b.IndexBranchId,
+
+    p.ProductId,
+    b.BranchId,
+    p.ProductName,
+    p.ExpiredAt,
+    p.SectionId,
+    i.Quantity AS StockQuantity,
+    s.SectionName,
+    b.BranchName,
+    b.Location
+
+FROM
+Inventories AS i
+INNER JOIN Products AS p ON i.ProductId = p.IndexProductId
+INNER JOIN Branches AS b ON i.BranchId = b.IndexBranchId
+INNER JOIN Sections AS s ON p.SectionId = s.SectionId;
+
+## Create procedures for deleting Product
+
+CREATE PROCEDURE SP_DeleteProduct
+@IndexProductId BIGINT
+AS
+BEGIN
+SET NOCOUNT ON;
+
+    DELETE FROM Products
+    WHERE IndexProductId = @IndexProductId;
+
+    IF @@ROWCOUNT = 0
+    BEGIN
+        THROW 50000, 'Product not found or deletion failed.', 1;
+        RETURN;
+    END
+
+END;
+
+## Create procedures for updating Inventories
+
+CREATE PROCEDURE SP_UpdateInventoryRecord
+    @InventoryId BIGINT,
+    @ProductId BIGINT,
+    @BranchId INT,
+    @NewQuantity INT
+AS
+BEGIN
+
+    UPDATE Inventories
+    SET 
+        ProductId = @ProductId,
+        BranchId = @BranchId,
+        Quantity = @NewQuantity,
+        UpdatedAt = GETDATE()
+    WHERE 
+        InventoryId = @InventoryId;
+
+END
