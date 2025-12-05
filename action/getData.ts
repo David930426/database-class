@@ -41,7 +41,8 @@ export async function getDataItem(
   quantityLess15: boolean,
   quantity15To30: boolean,
   quantityOver30: boolean,
-  searchTerm: string
+  searchTerm: string,
+  selectOrderProduct: boolean,
 ): Promise<GetItem[] | null> {
   try {
     const pool = await DbConnect();
@@ -54,7 +55,8 @@ export async function getDataItem(
     let whereClause = "";
     let searchCondition = "";
 
-    if (searchTerm && searchTerm.trim().length > 0) { // FOR SEARCH FUNCTION
+    if (searchTerm && searchTerm.trim().length > 0) {
+      // FOR SEARCH FUNCTION
       searchCondition = `
             (
               ProductId LIKE '%' + @SearchTerm + '%' 
@@ -98,8 +100,14 @@ export async function getDataItem(
     } else {
       orderByClause = `
           ORDER BY ${
-            orderProduct ? "IndexProductId" : "IndexProductId DESC"
-          }, ${orderBranch ? "IndexBranchId" : "IndexBranchId DESC"}
+            selectOrderProduct
+              ? orderProduct
+                ? "IndexProductId, IndexBranchId"
+                : "IndexProductId DESC, IndexBranchId"
+              : orderBranch
+              ? "IndexBranchId, IndexProductId"
+              : "IndexBranchId DESC, IndexProductId"
+          }
         `;
     }
 

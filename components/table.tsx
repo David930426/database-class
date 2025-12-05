@@ -22,6 +22,7 @@ export function Table() {
   const [dangerQuantity, setDangerQuantity] = useState(false);
   const [dangerExp, setDangerExp] = useState(false);
   const [refreshData, setRefreshData] = useState(0);
+  const [selectedOrderProduct, setSelectedOrderProduct] = useState(true);
 
   const [quantity30More, setQuantity30More] = useState(false);
   const [quantity15to30, setQuantity15to30] = useState(false);
@@ -52,7 +53,8 @@ export function Table() {
         quantity15Less,
         quantity15to30,
         quantity30More,
-        searchInput
+        searchInput,
+        selectedOrderProduct
       );
       const numberData = await allInventoriesNumber();
       const searchNumberData = await totalShowInventory(
@@ -77,6 +79,7 @@ export function Table() {
     quantity15to30,
     quantity30More,
     searchInput,
+    selectedOrderProduct,
   ]);
 
   if (!data) {
@@ -144,7 +147,14 @@ export function Table() {
                 <th className="h-15 min-w-30 rounded-l-xl md:w-[15%] md:h-20 md:text-xl">
                   Product{" "}
                   <button
-                    onClick={() => setOrdProduct(!ordProduct)}
+                    onClick={() => {
+                      if (selectedOrderProduct) {
+                        setOrdProduct(!ordProduct);
+                      } else {
+                        setSelectedOrderProduct(true);
+                        setOrdBranch(true);
+                      }
+                    }}
                     className={`size-4 hover:cursor-pointer md:size-5 ${
                       (dangerQuantity || dangerExp) && "hidden"
                     }`}
@@ -181,7 +191,14 @@ export function Table() {
                 <th className="h-15 min-w-25 md:w-[15%] md:h-20 md:text-xl">
                   Branch{" "}
                   <button
-                    onClick={() => setOrdBranch(!ordBranch)}
+                    onClick={() => {
+                      if (!selectedOrderProduct) {
+                        setOrdBranch(!ordBranch);
+                      } else {
+                        setSelectedOrderProduct(false);
+                        setOrdProduct(true);
+                      }
+                    }}
                     className={`size-4 hover:cursor-pointer md:size-5 ${
                       (dangerQuantity || dangerExp) && "hidden"
                     }`}
