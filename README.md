@@ -180,20 +180,150 @@ END;
 ## Create procedures for updating Inventories
 
 CREATE PROCEDURE SP_UpdateInventoryRecord
-    @InventoryId BIGINT,
-    @ProductId BIGINT,
-    @BranchId INT,
-    @NewQuantity INT
+@InventoryId BIGINT,
+@ProductId BIGINT,
+@BranchId INT,
+@NewQuantity INT
 AS
 BEGIN
 
     UPDATE Inventories
-    SET 
+    SET
         ProductId = @ProductId,
         BranchId = @BranchId,
         Quantity = @NewQuantity,
         UpdatedAt = GETDATE()
-    WHERE 
+    WHERE
         InventoryId = @InventoryId;
 
 END
+
+## Create table for audit product
+
+CREATE TABLE ProductAudit (
+AuditID BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+IndexProductId BIGINT NOT NULL,
+OldProductName NVARCHAR(100),
+NewProductName NVARCHAR(100),
+OldSectionId INT,
+NewSectionId INT,
+ChangeDate DATETIME DEFAULT GETDATE(),
+ActionType NVARCHAR(50) NOT NULL
+);
+
+## Make a trigger, if product got an update then the update record will save to the database
+
+CREATE TRIGGER TRG_Products_Audit_Update
+ON Products
+AFTER UPDATE
+AS
+BEGIN
+SET NOCOUNT ON;
+IF UPDATE(ProductName) OR UPDATE(SectionId)
+BEGIN
+INSERT INTO ProductAudit (
+IndexProductId,
+OldProductName,
+NewProductName,
+OldSectionId,
+NewSectionId,
+ChangeDate,
+ActionType
+)
+SELECT
+I.IndexProductId,
+D.ProductName,
+I.ProductName,
+D.SectionId,
+I.SectionId,
+GETDATE(),
+'PRODUCT_DETAIL_UPDATE'
+FROM
+Inserted I
+INNER JOIN
+Deleted D
+ON I.IndexProductId = D.IndexProductId
+WHERE
+I.ProductName <> D.ProductName OR I.SectionId <> D.SectionId;
+END
+END;
+
+## Make a trigger, if user inserted new product
+
+CREATE TRIGGER TRG_Products_Audit_Insert
+ON Products
+AFTER INSERT
+AS
+BEGIN
+SET NOCOUNT ON;
+INSERT INTO ProductAudit (
+IndexProductId,
+NewProductName,
+NewSectionId,
+ChangeDate,
+ActionType
+)
+SELECT
+I.IndexProductId,
+I.ProductName,
+I.SectionId,
+GETDATE(),
+'PRODUCT_CREATED'
+FROM
+Inserted I;
+END;
+
+## Make a triggrt, if user change product expired date
+
+CREATE TRIGGER TRG_Products_Audit_Update_Expired
+ON Products
+AFTER UPDATE
+AS
+BEGIN
+SET NOCOUNT ON;
+IF UPDATE(ExpiredAt)
+BEGIN
+INSERT INTO ProductAudit (
+IndexProductId,
+ChangeDate,
+ActionType,
+NewProductName
+)
+SELECT
+I.IndexProductId,
+GETDATE(),
+'EXPIRY_DATE_MODIFIED',
+I.ProductName
+FROM
+Inserted I
+INNER JOIN
+Deleted D
+ON I.IndexProductId = D.IndexProductId
+WHERE I.ExpiredAt <> D.ExpiredAt;
+END
+END;
+
+## Make a trigger, id user delete product
+
+CREATE TRIGGER TRG_Products_Audit_Delete
+ON Products
+AFTER DELETE
+AS
+BEGIN
+SET NOCOUNT ON;
+INSERT INTO ProductAudit (
+IndexProductId,
+OldProductName,
+OldSectionId,
+ChangeDate,
+ActionType
+)
+SELECT
+D.IndexProductId,
+D.ProductName,
+D.SectionId,
+GETDATE(),
+'PRODUCT_DELETED'
+FROM
+Deleted D;
+END;

@@ -9,6 +9,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/solid";
 import { TableFooter } from "@/components/ui/footer-table";
+import { HistoryList } from "@/components/history-list";
 
 export function ProductList({
   data,
@@ -73,7 +74,9 @@ export function ProductList({
               </button>
             </th>
             <th className="h-15 w-25 md:h-20">Section Name</th>
-            <th className="rounded-r-xl w-20"></th>
+            <th className="rounded-r-xl w-20">
+              <HistoryList />
+            </th>
           </tr>
         </thead>
 

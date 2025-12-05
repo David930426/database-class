@@ -60,7 +60,7 @@ export type GetInventory = {
   ProductId: number;
   BranchId: number;
   Quantity: number;
-}
+};
 
 export type Products = {
   IndexProductId: number;
@@ -70,7 +70,7 @@ export type Products = {
   SectionId: number;
   SectionName: string;
   Count?: number;
-}
+};
 
 export type EditProducts = {
   IndexProductId: number;
@@ -78,11 +78,22 @@ export type EditProducts = {
   ProductName: string;
   ExpiredAt: Date;
   SectionId: number;
-}
+};
 
 export type Branches = {
   IndexBranchId: number;
   BranchId: string;
   BranchName: string;
   Location: string;
-}
+};
+
+export type ProductAuditLog = {
+  AuditID: number;
+  IndexProductId: number;
+  OldProductName: string | null;
+  NewProductName: string | null;
+  OldSectionId: number | null;
+  NewSectionId: number | null;
+  ChangeDate: Date;
+  ActionType: string;
+};
