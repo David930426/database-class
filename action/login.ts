@@ -20,7 +20,7 @@ export async function login(
 
     const result = await pool
       .request()
-      .input("Username", sql.NVarChar, parsedData.username)
+      .input("Username", sql.NVarChar, parsedData.username) // QUERY FOR LOGIN
       .query(`SELECT * FROM Users
             WHERE Username = @Username`);
 
@@ -31,7 +31,7 @@ export async function login(
       };
     }
 
-    // Catch the password and set password to bycrypt mode for coompare
+    // Catch the password and set password to bycrypt mode for compare
     const userRecord = result.recordset[0];
     const storedHash = userRecord.Password;
     const storedHashToString = storedHash.toString("utf8");

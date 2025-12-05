@@ -13,7 +13,7 @@ export async function branch(
   try {
     const pool = await DbConnect();
     const result = await pool
-      .request()
+      .request()                                                  // TAKE ALL DATA IN THE BRANCH TABLE
       .input("SearchTerm", sql.NVarChar, setBranchSearch).query(`
         SELECT * FROM Branches
         ${
@@ -42,7 +42,7 @@ export async function totalBranch(): Promise<number> {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .query(`SELECT COUNT(*) AS TotalBranch FROM Branches;`);
+      .query(`SELECT COUNT(*) AS TotalBranch FROM Branches;`);  // COUNT ALL BRANCH
     if (result.recordset.length > 0) {
       const count = result.recordset[0].TotalBranch;
       return count || 0;
@@ -61,7 +61,7 @@ export async function totalShowBranch(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SearchTerm", sql.NVarChar, setBranchSearch)
+      .input("SearchTerm", sql.NVarChar, setBranchSearch)  // COUNT TOTAL SEARCH OF BRANCH
       .query(`SELECT COUNT(*) AS TotalCount 
           FROM Branches
           ${
@@ -90,7 +90,7 @@ export async function deleteBranch(indexBranchId: number) {
     const result = await pool
       .request()
       .input("IndexBranchId", sql.BigInt, indexBranchId)
-      .query(`DELETE FROM Branches WHERE IndexBranchId = @IndexBranchId`);
+      .query(`DELETE FROM Branches WHERE IndexBranchId = @IndexBranchId`); // DELETE A BRANCH
     if (result.rowsAffected[0] === 0) {
       console.log("Delete inventory unsuccessfull");
     }
@@ -116,7 +116,7 @@ export async function addBranch(prevState: FormState, formData: FormData) {
     const result = await pool
       .request()
       .input("BranchName", sql.NVarChar, parsedData.branchName)
-      .input("Location", sql.NVarChar, parsedData.branchLocation)
+      .input("Location", sql.NVarChar, parsedData.branchLocation) // ADD A BRANCH
       .query(`INSERT INTO Branches (BranchName, Location) VALUES
         (@BranchName, @Location)`);
     if (!result) {
@@ -146,7 +146,7 @@ export async function oneBranch(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("IndexBranchId", sql.Int, indexBranchId)
+      .input("IndexBranchId", sql.Int, indexBranchId) // SEARCH A SPECIFIC BRANCH FOR EDITING
       .query(
         `SELECT *
         FROM Branches
@@ -180,7 +180,7 @@ export async function editBranch(prevState: FormState, formData: FormData) {
       .request()
       .input("IndexBranchId", sql.Int, parsedData.indexBranchId)
       .input("BranchName", sql.NVarChar, parsedData.branchName)
-      .input("Location", sql.NVarChar, parsedData.branchLocation)
+      .input("Location", sql.NVarChar, parsedData.branchLocation) // UPDATE A BRANCH
       .query(`UPDATE Branches 
         SET BranchName = @BranchName, Location = @Location
         WHERE IndexBranchId = @IndexBranchId`);

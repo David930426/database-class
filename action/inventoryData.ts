@@ -21,14 +21,14 @@ export async function addInventory(prevState: FormState, formData: FormData) {
     const pool = await DbConnect();
     const searchProductIndexId = await pool
       .request()
-      .input("ProductId", sql.NVarChar, parsedData.product)
+      .input("ProductId", sql.NVarChar, parsedData.product) // SEARCH THE PRODUCT FOR INVENTORY INSERTION
       .query(
         `SELECT IndexProductId FROM Products WHERE ProductId = @ProductId`
       );
     const searchBranchIndexId = await pool
       .request()
       .input("BranchId", sql.NVarChar, parsedData.branch)
-      .query(`SELECT IndexBranchId FROM Branches WHERE BranchId = @BranchId`);
+      .query(`SELECT IndexBranchId FROM Branches WHERE BranchId = @BranchId`); // SEARCH THE BRANCH FOR INVENTORY INSERTION
 
     if (!searchProductIndexId || !searchBranchIndexId) {
       return {
@@ -49,7 +49,7 @@ export async function addInventory(prevState: FormState, formData: FormData) {
         sql.Int,
         searchBranchIndexId.recordset[0].IndexBranchId
       )
-      .input("Quantity", sql.Int, parsedData.quantity)
+      .input("Quantity", sql.Int, parsedData.quantity)  // INSERT VALUES
       .query(`INSERT INTO Inventories (ProductId, BranchId, Quantity) 
         VALUES (@ProductId, @BranchId, @Quantity)`);
 

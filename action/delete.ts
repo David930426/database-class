@@ -16,7 +16,7 @@ export async function deleteUser() {
     const result = await pool
       .request()
       .input("userId", sql.Int, session?.userId)
-      .query(`DELETE FROM Users WHERE UserID = @userId`);
+      .query(`DELETE FROM Users WHERE UserID = @userId`);   // DELETE USER
     if (result.rowsAffected[0] === 0) {
       console.log("Can not delete User");
     }

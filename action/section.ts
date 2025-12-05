@@ -13,7 +13,7 @@ export async function section(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SearchTerm", sql.NVarChar, setSectionSearch)
+      .input("SearchTerm", sql.NVarChar, setSectionSearch)  // SHOW ITEMS IN SECTION
       .query(
         `SELECT * FROM Sections ${
           setSectionSearch &&
@@ -35,7 +35,7 @@ export async function totalSection(): Promise<number> {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .query(`SELECT COUNT(*) AS TotalSection FROM Sections;`);
+      .query(`SELECT COUNT(*) AS TotalSection FROM Sections;`);  // COUNT TOTAL SECTION
     if (result.recordset.length > 0) {
       const count = result.recordset[0].TotalSection;
       return count || 0;
@@ -54,7 +54,7 @@ export async function totalShowSection(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SearchTerm", sql.NVarChar, setSectionSearch)
+      .input("SearchTerm", sql.NVarChar, setSectionSearch)  // COUNT SEARCH TOTAL RESULT
       .query(`SELECT COUNT(*) AS TotalCount 
           FROM Sections
           ${
@@ -80,7 +80,7 @@ export async function deleteSection(sectionId: number) {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SectionId", sql.Int, sectionId)
+      .input("SectionId", sql.Int, sectionId)   // DELETE A SECTION
       .query(`DELETE FROM Sections WHERE SectionId = @SectionId`);
     if (result.rowsAffected[0] === 0) {
       console.log("Delete inventory unsuccessfull");
@@ -106,7 +106,7 @@ export async function addSection(prevState: FormState, formData: FormData) {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SectionName", sql.NVarChar, parsedData.sectionName)
+      .input("SectionName", sql.NVarChar, parsedData.sectionName) // INSERT DATA TO SECTION
       .query(`INSERT INTO Sections (SectionName) VALUES
         (@SectionName)`);
     if (!result) {
@@ -136,7 +136,7 @@ export async function oneSection(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SectionId", sql.Int, sectionId)
+      .input("SectionId", sql.Int, sectionId) // SEARCH A SECTION FOR UPDATE
       .query(
         `SELECT *
         FROM Sections
@@ -169,7 +169,7 @@ export async function editSection(prevState: FormState, formData: FormData) {
     const result = await pool
       .request()
       .input("SectionId", sql.Int, parsedData.sectionId)
-      .input("SectionName", sql.NVarChar, parsedData.sectionName)
+      .input("SectionName", sql.NVarChar, parsedData.sectionName) // UPDATE A SECTION
       .query(`UPDATE Sections 
         SET SectionName = @SectionName
         WHERE SectionId = @SectionId`);

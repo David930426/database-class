@@ -30,7 +30,7 @@ export async function singingUp(
       .request()
       .input("Username", sql.NVarChar, parsedData.username)
       .input("Email", sql.NVarChar, parsedData.email)
-      .input("Password", sql.VarBinary, hashBuffer)
+      .input("Password", sql.VarBinary, hashBuffer)     // QUERY FOR REGISTER OR ADD ACCOUNT
       .query(`INSERT INTO Users (Username, Email, Password)
               VALUES (@Username, @Email, @Password);
             `);

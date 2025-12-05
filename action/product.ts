@@ -15,7 +15,7 @@ export async function product(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SearchTerm", sql.NVarChar, setProductSearch)
+      .input("SearchTerm", sql.NVarChar, setProductSearch)    // SEARCH FOR THE PRODUCT
       .query(
         `SELECT p.IndexProductId, p.ProductId, p.ProductName, p.ExpiredAt, p.SectionId, s.SectionName 
         FROM Products AS p INNER JOIN Sections AS s ON p.SectionId = s.SectionId
@@ -48,7 +48,7 @@ export async function totalProduct(): Promise<number> {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .query(`SELECT COUNT(*) AS TotalProducts FROM Products;`);
+      .query(`SELECT COUNT(*) AS TotalProducts FROM Products;`); //COUNT THE TOTAL OF THE PRODUCT
     if (result.recordset.length > 0) {
       const count = result.recordset[0].TotalProducts;
       return count || 0;
@@ -67,7 +67,7 @@ export async function totalShowProduct(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SearchTerm", sql.NVarChar, setProductSearch)
+      .input("SearchTerm", sql.NVarChar, setProductSearch) // TOTAL SEARCH PRODUCT
       .query(`SELECT COUNT(*) AS TotalCount 
           FROM Products AS p INNER JOIN Sections AS s ON p.SectionId = s.SectionId
           ${
@@ -99,7 +99,7 @@ export async function addProduct(prevState: FormState, formData: FormData) {
       .request()
       .input("ProductName", sql.NVarChar, parsedData.productName)
       .input("ExpiredAt", sql.Date, parsedData.expiredAt)
-      .input("SectionId", sql.Int, parsedData.sectionId)
+      .input("SectionId", sql.Int, parsedData.sectionId)    // ADD NEW PRODUCT
       .query(`INSERT INTO Products (ProductName, ExpiredAt, SectionId)
         VALUES (@ProductName, @ExpiredAt, @SectionId)`);
     if (result.rowsAffected[0] === 0) {
@@ -129,7 +129,7 @@ export async function OneProduct(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("IndexProductId", sql.BigInt, indexProductId)
+      .input("IndexProductId", sql.BigInt, indexProductId)  // SEARCH ONE PRODUCT FROM INDEX
       .query(
         `SELECT IndexProductId, ProductId, ProductName, ExpiredAt, SectionId
         FROM Products
@@ -155,7 +155,7 @@ export async function editProduct(prevState: FormState, formData: FormData) {
       .request()
       .input("IndexProductId", sql.BigInt, parsedData.indexProductId)
       .input("ProductName", sql.NVarChar, parsedData.productName)
-      .input("ExpiredAt", sql.Date, parsedData.expiredAt)
+      .input("ExpiredAt", sql.Date, parsedData.expiredAt)     // EDIT PRODUCT
       .input("SectionId", sql.Int, parsedData.sectionId).query(`UPDATE Products 
         SET ProductName = @ProductName, ExpiredAt = @ExpiredAt, SectionId = @SectionId
         WHERE IndexProductId = @IndexProductId`);
@@ -184,7 +184,7 @@ export async function deleteProduct(indexProductId: number) {
     const pool = await DbConnect();
     const request = pool.request();
     request.input("IndexProductId", sql.BigInt, indexProductId);
-    const result = await request.execute("SP_DeleteProduct");
+    const result = await request.execute("SP_DeleteProduct");   // DELETE PRODUCT WITH STORED PROCEDURES
     if (result.rowsAffected[0] === 0) {
       console.log("Delete inventory unsuccessfull");
     }

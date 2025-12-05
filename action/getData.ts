@@ -15,7 +15,7 @@ export async function getDataUser() {
   try {
     const pool = await DbConnect();
 
-    const data = await pool.request().input("UserID", sql.Int, userId)
+    const data = await pool.request().input("UserID", sql.Int, userId) // GET DATA USER FOR UPDATE QUERY
       .query(`SELECT * FROM Users
             WHERE UserID = @UserID`);
 
@@ -49,12 +49,12 @@ export async function getDataItem(
       SELECT InventoryId, ProductId, ProductName, ExpiredAt, SectionName, 
              StockQuantity, BranchId, BranchName, Location, IndexProductId, IndexBranchId
       FROM V_FullInventoryDetails
-    `;
+    `; // TAKE ALL DATA FOR TABLE
 
     let whereClause = "";
     let searchCondition = "";
 
-    if (searchTerm && searchTerm.trim().length > 0) {
+    if (searchTerm && searchTerm.trim().length > 0) { // FOR SEARCH FUNCTION
       searchCondition = `
             (
               ProductId LIKE '%' + @SearchTerm + '%' 
@@ -67,7 +67,7 @@ export async function getDataItem(
         `;
     }
 
-    let quantityCondition = "";
+    let quantityCondition = ""; // FILTER QUANTITY
     if (quantityOver30) {
       quantityCondition = "StockQuantity > 30";
     } else if (quantity15To30) {
@@ -123,7 +123,7 @@ export async function getProduct(): Promise<GetProducts[] | null> {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .query(`SELECT ProductId, ProductName FROM Products`);
+      .query(`SELECT ProductId, ProductName FROM Products`); // GET PRODUCT NAME
     return result.recordset as GetProducts[];
   } catch (err) {
     console.error(err);
@@ -136,7 +136,7 @@ export async function getBranch(): Promise<GetBranches[] | null> {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .query(`SELECT BranchId, BranchName FROM Branches`);
+      .query(`SELECT BranchId, BranchName FROM Branches`); // GET BRANCH NAME
     return result.recordset as GetBranches[];
   } catch (err) {
     console.error(err);
@@ -149,7 +149,7 @@ export async function getSection(): Promise<GetSection[] | null> {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .query(`SELECT SectionId, SectionName FROM Sections`);
+      .query(`SELECT SectionId, SectionName FROM Sections`); // GET SECTION NAME
     return result.recordset as GetSection[];
   } catch (err) {
     console.error(err);
@@ -162,7 +162,7 @@ export async function allInventoriesNumber(): Promise<number> {
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .query(`SELECT COUNT(*) AS TotalInventory FROM Inventories;`);
+      .query(`SELECT COUNT(*) AS TotalInventory FROM Inventories;`); // COUNT ALL INVENTORY
     if (result.recordset.length > 0) {
       const count = result.recordset[0].TotalInventory;
       return count || 0;
@@ -184,7 +184,7 @@ export async function totalShowInventory(
     const pool = await DbConnect();
     const result = await pool
       .request()
-      .input("SearchTerm", sql.NVarChar, searchTerm)
+      .input("SearchTerm", sql.NVarChar, searchTerm) // COUNT SEARCH TOTAL
       .query(`SELECT COUNT(*) AS TotalCount 
               FROM Inventories AS i INNER JOIN Products AS p   
                 ON i.ProductId = p.IndexProductId 
@@ -195,7 +195,6 @@ export async function totalShowInventory(
               INNER JOIN Sections AS s 
                 ON p.SectionId = s.SectionId
 
-              -- START: Dynamic WHERE Clause (Exact copy of your filtering logic, excluding ORDER BY)
               ${
                 quantityOver30
                   ? "WHERE i.Quantity > 30"

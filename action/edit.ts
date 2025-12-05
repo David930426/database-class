@@ -29,7 +29,7 @@ export async function editProfile(
     const result = await pool
       .request()
       .input("Username", sql.NVarChar, parsedData.username)
-      .input("Email", sql.NVarChar, parsedData.email)
+      .input("Email", sql.NVarChar, parsedData.email)     // UPDATE A USER INFORMATION QUERY
       .input("UserId", sql.Int, session?.userId).query(`
         UPDATE Users
         SET Username = @Username, Email = @Email
@@ -86,7 +86,7 @@ export async function editPassword(
 
     const result = await pool
       .request()
-      .input("userId", sql.Int, session?.userId)
+      .input("userId", sql.Int, session?.userId)        // GET PASSWORD INFORMATION A USER
       .query(`SELECT Password FROM Users WHERE UserID = @userId`);
 
     const passwordToString = result.recordset[0].Password.toString("utf8");
@@ -111,7 +111,7 @@ export async function editPassword(
     const inputDataResult = await pool
       .request()
       .input("UserId", sql.Int, session?.userId)
-      .input("Password", sql.VarBinary, passInputDb)
+      .input("Password", sql.VarBinary, passInputDb)    // CHANGE PASSWORD QUERY
       .query(`UPDATE Users SET Password = @Password WHERE UserID = @UserId`);
 
     if (inputDataResult.rowsAffected[0] === 0) {

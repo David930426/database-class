@@ -38,14 +38,14 @@ export async function editInventory(
 
     const searchProductIndexId = await pool
       .request()
-      .input("ProductId", sql.NVarChar, parsedData.product)
+      .input("ProductId", sql.NVarChar, parsedData.product) // CHECK PRODUCT ID FOR UPDATE
       .query(
         `SELECT IndexProductId FROM Products WHERE ProductId = @ProductId`
       );
     const searchBranchIndexId = await pool
       .request()
       .input("BranchId", sql.NVarChar, parsedData.branch)
-      .query(`SELECT IndexBranchId FROM Branches WHERE BranchId = @BranchId`);
+      .query(`SELECT IndexBranchId FROM Branches WHERE BranchId = @BranchId`);  // CHECK BRANCH ID FOR UPDATE
 
     if (!searchProductIndexId || !searchBranchIndexId) {
       return {
@@ -61,7 +61,7 @@ export async function editInventory(
       .input("BranchId", sql.Int, searchBranchIndexId.recordset[0].IndexBranchId)
       .input("NewQuantity", sql.Int, parsedData.quantity);
 
-    await result.execute("SP_UpdateInventoryRecord");
+    await result.execute("SP_UpdateInventoryRecord");  // UPDATE INVENTORY BY USING STORED PROCEDURES
     if (!result) {
       return {
         success: false,
@@ -90,7 +90,7 @@ export async function deleteInventory(inventoryId: number) {
       .input("InventoryId", sql.BigInt, inventoryId)
       .query(`DELETE FROM Inventories WHERE InventoryId = @InventoryId`);
     if (result.rowsAffected[0] === 0) {
-      console.log("Delete inventory unsuccessfull");
+      console.log("Delete inventory unsuccessfull");  // DELETE INVENTORIES
     }
   } catch (err) {
     console.error(err);
