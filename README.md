@@ -136,27 +136,26 @@ UpdatedAt DATETIME DEFAULT GETDATE(),
 
 ## Create view Inventories
 
-CREATE VIEW V_FullInventoryDetails AS
-SELECT
-i.InventoryId,
-p.IndexProductId,
-b.IndexBranchId,
+    CREATE VIEW V_FullInventoryDetails AS
+    SELECT
+        i.InventoryId,
+        p.IndexProductId,
+        b.IndexBranchId,
+        p.ProductId,
+        b.BranchId,
+        p.ProductName,
+        p.ExpiredAt,
+        p.SectionId,
+        i.Quantity AS StockQuantity,
+        s.SectionName,
+        b.BranchName,
+        b.Location
 
-    p.ProductId,
-    b.BranchId,
-    p.ProductName,
-    p.ExpiredAt,
-    p.SectionId,
-    i.Quantity AS StockQuantity,
-    s.SectionName,
-    b.BranchName,
-    b.Location
-
-FROM
-Inventories AS i
-INNER JOIN Products AS p ON i.ProductId = p.IndexProductId
-INNER JOIN Branches AS b ON i.BranchId = b.IndexBranchId
-INNER JOIN Sections AS s ON p.SectionId = s.SectionId;
+    FROM
+    Inventories AS i
+    INNER JOIN Products AS p ON i.ProductId = p.IndexProductId
+    INNER JOIN Branches AS b ON i.BranchId = b.IndexBranchId
+    INNER JOIN Sections AS s ON p.SectionId = s.SectionId;
 
 ## Create procedures for deleting Product
 
