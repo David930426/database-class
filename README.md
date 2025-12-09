@@ -276,7 +276,7 @@ _** Don't forget to open TCP connection and set the port to 1433
         Inserted I;
     END;
 
-## Make a triggrt, if user change product expired date
+## Make a trigger, if user change product expired date
 
     CREATE TRIGGER TRG_Products_Audit_Update_Expired
     ON Products
@@ -306,7 +306,7 @@ _** Don't forget to open TCP connection and set the port to 1433
     END
     END;
 
-## Make a trigger, id user delete product
+## Make a trigger, if user delete product
 
     CREATE TRIGGER TRG_Products_Audit_Delete
     ON Products
