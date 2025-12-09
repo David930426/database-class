@@ -45,46 +45,46 @@ export function ProductList({
       >
         Products
       </TitleTable>
-      <table className="w-full">
-        <thead className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 md:text-2xl">
-          <tr>
-            <th className="rounded-l-xl h-15 w-15 md:h-20">
-              Id
-              <button
-                onClick={() => {
-                  setProductOrder(!productOrder);
-                  setProduct();
-                }}
-                className={`size-4 ml-0.5 hover:cursor-pointer md:size-5`}
-              >
-                {!productOrder ? <ArrowUpIcon /> : <ArrowDownIcon />}
-              </button>
-            </th>
-            <th className="h-15 w-20 md:h-20">Name</th>
-            <th className="h-15 w-30 md:h-20">
-              Expired{" "}
-              <button
-                onClick={() => {
-                  setExpProduct(!expProduct);
-                  setOrder();
-                }}
-                className={`size-4 hover:cursor-pointer md:size-5`}
-              >
-                {expProduct ? <EyeIcon /> : <EyeSlashIcon />}
-              </button>
-            </th>
-            <th className="h-15 w-25 md:h-20">Section Name</th>
-            <th className="rounded-r-xl w-20">
-              <HistoryList />
-            </th>
-          </tr>
-        </thead>
+      {!data ? (
+        <h1 className="text-3xl text-center mt-10 mb-10 md:text-5xl">
+          There is no Product data
+        </h1>
+      ) : (
+        <table className="w-full">
+          <thead className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 md:text-2xl">
+            <tr>
+              <th className="rounded-l-xl h-15 w-15 md:h-20">
+                Id
+                <button
+                  onClick={() => {
+                    setProductOrder(!productOrder);
+                    setProduct();
+                  }}
+                  className={`size-4 ml-0.5 hover:cursor-pointer md:size-5`}
+                >
+                  {!productOrder ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                </button>
+              </th>
+              <th className="h-15 w-20 md:h-20">Name</th>
+              <th className="h-15 w-30 md:h-20">
+                Expired{" "}
+                <button
+                  onClick={() => {
+                    setExpProduct(!expProduct);
+                    setOrder();
+                  }}
+                  className={`size-4 hover:cursor-pointer md:size-5`}
+                >
+                  {expProduct ? <EyeIcon /> : <EyeSlashIcon />}
+                </button>
+              </th>
+              <th className="h-15 w-25 md:h-20">Section Name</th>
+              <th className="rounded-r-xl w-20">
+                <HistoryList />
+              </th>
+            </tr>
+          </thead>
 
-        {!data ? (
-          <h1 className="text-3xl text-center mt-10 mb-10 md:text-5xl">
-            There is no Inventory data
-          </h1>
-        ) : (
           <tbody className="capitalize divide-y divide-zinc-200 text-center md:text-xl">
             {data.map((item) => {
               return (
@@ -119,8 +119,8 @@ export function ProductList({
               );
             })}
           </tbody>
-        )}
-      </table>
+        </table>
+      )}
       <TableFooter
         data={data === null}
         numberOfItem={searchProduct}

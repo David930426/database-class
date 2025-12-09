@@ -28,18 +28,19 @@ export function SectionList({
       >
         Sections
       </TitleTable>
-      <table className="w-full">
-        <thead className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 md:text-2xl">
-          <tr>
-            <th className="rounded-l-xl h-15 w-75 md:h-20 md:w-1/2">Name</th>
-            <th className="rounded-r-xl md:h-20 md:w-1/2"></th>
-          </tr>
-        </thead>
-        {!data ? (
-          <h1 className="text-3xl text-center mt-10 mb-10 md:text-5xl">
-            There is no Inventory data
-          </h1>
-        ) : (
+      {!data ? (
+        <h1 className="text-3xl text-center mt-10 mb-10 md:text-5xl">
+          There is no Section data
+        </h1>
+      ) : (
+        <table className="w-full">
+          <thead className="bg-linear-to-r from-sky-400 via-sky-500 to-blue-500 text-zinc-100 md:text-2xl">
+            <tr>
+              <th className="rounded-l-xl h-15 w-75 md:h-20 md:w-1/2">Name</th>
+              <th className="rounded-r-xl md:h-20 md:w-1/2"></th>
+            </tr>
+          </thead>
+
           <tbody className="capitalize divide-y divide-zinc-200 text-center md:text-xl">
             {data.map((item) => (
               <tr key={item.SectionId}>
@@ -59,8 +60,8 @@ export function SectionList({
               </tr>
             ))}
           </tbody>
-        )}
-      </table>
+        </table>
+      )}
       <TableFooter
         data={data === null}
         numberOfItem={searchNumberSection}
